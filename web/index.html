@@ -1,34 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Arduino Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Planner</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <h1>🔥 Arduino Smart Dashboard</h1>
-
-  <div class="card">
-    <h2>Temperature</h2>
-    <p id="temperature">-- °C</p>
+  <div class="container">
+    <h1>What’s on the menu today?</h1>
+    <div class="input-group">
+      <input type="text" id="menuInput" placeholder="Enter what you would like to cook today">
+      <button id="goButton"></button>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>Heat Index</h2>
-    <p id="heatIndex">-- °C</p>
-  </div>
-
-  <div class="card">
-    <h2>Object Detection</h2>
-    <ul id="detections"></ul>
-  </div>
-
-  <div class="card">
-    <h2>Override Threshold</h2>
-    <input type="number" id="thresholdInput" step="0.1" min="0" max="1">
-    <button onclick="sendThreshold()">Set Threshold</button>
-  </div>
-
-  <script src="app.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
