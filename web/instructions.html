@@ -132,8 +132,15 @@
 
     // ── Navigation ───────────────────────────────────────────────────
     function updateButtons() {
+      const nextBtn = document.getElementById("nextBtn");
       document.getElementById("prevBtn").disabled = currentStep === 0;
-      document.getElementById("nextBtn").disabled = currentStep === steps.length - 1;
+      if (currentStep === steps.length - 1) {
+        nextBtn.textContent = "Finish";
+        nextBtn.classList.add("instr-btn-finish");
+      } else {
+        nextBtn.textContent = "Next Step";
+        nextBtn.classList.remove("instr-btn-finish");
+      }
     }
 
     function applyStep(index, direction) {
@@ -156,7 +163,11 @@
     }
 
     document.getElementById("nextBtn").addEventListener("click", () => {
-      if (currentStep < steps.length - 1) goToStep(currentStep + 1, "up");
+      if (currentStep < steps.length - 1) {
+        goToStep(currentStep + 1, "up");
+      } else {
+        window.location.href = "finish.html";
+      }
     });
     document.getElementById("prevBtn").addEventListener("click", () => {
       if (currentStep > 0) goToStep(currentStep - 1, "down");

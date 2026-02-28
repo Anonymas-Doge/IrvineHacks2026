@@ -335,6 +335,14 @@ button:hover {
   transform: none;
 }
 
+.instr-btn-finish {
+  background: #5a7a4a;
+}
+
+.instr-btn-finish:hover:not(:disabled) {
+  background: #6e9460;
+}
+
 .instr-stats {
   display: flex;
   align-items: center;
@@ -353,6 +361,113 @@ button:hover {
 .stat-icon {
   width: 34px;
   height: 34px;
+}
+
+/* ── Finish Page ── */
+.finish-page {
+  width: 100%;
+  height: 100vh;
+  background-color: #F0D9B5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.finish-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.finish-title {
+  font-size: 5rem;
+  font-weight: 800;
+  color: #111;
+  margin: 0;
+}
+
+.finish-dish {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.finish-storage {
+  font-size: 1rem;
+  color: #666;
+  font-style: italic;
+}
+
+.finish-actions {
+  display: flex;
+  gap: 20px;
+  margin-top: 12px;
+}
+
+.finish-action-btn {
+  padding: 16px 48px;
+  border-radius: 12px;
+  border: 2px solid #2a2a2a;
+  background: #2a2a2a;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: auto;
+  height: auto;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.finish-action-btn:hover {
+  background: #444;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.finish-action-btn-outline {
+  background: transparent;
+  color: #2a2a2a;
+}
+
+.finish-action-btn-outline:hover {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+/* Print styles for Save as PDF */
+.print-recipe {
+  display: none;
+}
+
+@media print {
+  body * { visibility: hidden; cursor: default !important; }
+  .print-recipe, .print-recipe * { visibility: visible; }
+  .print-recipe {
+    display: block;
+    position: fixed;
+    inset: 0;
+    padding: 40px;
+    font-family: Arial, sans-serif;
+    background: white;
+    color: black;
+  }
+  .print-recipe h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  .print-recipe ol {
+    font-size: 1rem;
+    line-height: 1.8;
+    padding-left: 20px;
+    margin-bottom: 20px;
+  }
+  .print-recipe p {
+    font-style: italic;
+    color: #555;
+  }
 }
 
 /* Recipes Page */
