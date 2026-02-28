@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import os
 import requests
 import flask
@@ -79,6 +80,18 @@ def parse_recipe():
     ...
 # returns id of first recipe that fits query
 @app.route("/getRecipe")
+=======
+def parse_recipe(data):
+    item_name = data["data"]["name"]
+    instructions = []
+    for i in data["data"]["instructions"]:
+        text = i["text"]
+        duration = i["structured"]["duration"] if i["structured"]["duration"] else None
+        action = i["structured"]["action"] if i["structured"]["action"] else None
+        temperature = i["structured"]["temperature"]["fahrenheit"] if i["structured"]["temperature"]["fahrenheit"] else None
+        instructions.append((text, action, duration,  temperature))
+    #return instructions
+>>>>>>> 16ea7f175d7fdbe90621743f016d2c0d4f19c1ea
 def get_recipe():
     query_string = flask.request.args.get("q")
     res = requests.get(f"{RECIPE_URL}?q={query_string}", headers={
