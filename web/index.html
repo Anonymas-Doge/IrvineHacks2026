@@ -7,28 +7,29 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>What’s on the menu today?</h1>
-    <div class="input-group">
-      <input type="text" id="menuInput" placeholder="Enter what you would like to cook today">
-      <button id="goButton">Go</button>
+  <nav class="navbar">
+    <a href="#" class="nav-link">Home</a>
+    <a href="#" class="nav-link">Recipes</a>
+    <a href="#" class="nav-link">Community</a>
+  </nav>
+
+  <main class="hero-container">
+    <div class="content-wrapper">
+      <h1>What’s on <br> the menu today?</h1>
+      
+      <div class="search-container">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="menuInput" placeholder="Search recipes...">
+      </div>
+
+      <div class="category-tags">
+        <button class="tag-btn" data-category="Breakfast">Breakfast</button>
+        <button class="tag-btn" data-category="Vegan">Vegan</button>
+        <button class="tag-btn" data-category="Quick Meals">Quick Meals</button>
+      </div>
     </div>
-  </div>
+  </main>
 
-  <script>
-    document.getElementById("goButton").addEventListener("click", () => {
-      const inputValue = document.getElementById("menuInput").value.trim();
-      if (!inputValue) {
-        alert("Please enter a menu item!");
-        return;
-      }
-
-      // Save input to localStorage for next page
-      localStorage.setItem("menuInput", inputValue);
-
-      // Navigate to recipes page
-      window.location.href = "recipes.html";
-    });
-  </script>
+  <script src="main.js"></script>
 </body>
 </html>
