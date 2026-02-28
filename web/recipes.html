@@ -13,34 +13,39 @@
     <button id="backButton" style="width: 400px; height: 50px">I want to cook something else instead</button>
   </div>
 
-  <script>
-    // Get the menu input from previous page
-    const menuInput = localStorage.getItem("menuInput") || "Your dish";
+<script>
+  // Get the menu input from previous page
+  const menuInput = localStorage.getItem("menuInput") || "Your dish";
 
-    // Placeholder recipe data (later replace with API)
-    const recipes = [
-      { title: "Recipe 1", summary: "Delicious and easy to make", ingredients: ["ingredient A", "ingredient B"] },
-      { title: "Recipe 2", summary: "Healthy and tasty", ingredients: ["ingredient C", "ingredient D"] },
-      { title: "Recipe 3", summary: "Quick and flavorful", ingredients: ["ingredient E", "ingredient F"] }
-    ];
+  // Placeholder recipe data
+  const recipes = [
+    { title: "Recipe 1", summary: "Delicious and easy to make", ingredients: ["ingredient A", "ingredient B"] },
+    { title: "Recipe 2", summary: "Healthy and tasty", ingredients: ["ingredient C", "ingredient D"] },
+    { title: "Recipe 3", summary: "Quick and flavorful", ingredients: ["ingredient E", "ingredient F"] }
+  ];
 
-    const grid = document.getElementById("recipeGrid");
+  const grid = document.getElementById("recipeGrid");
 
-    recipes.forEach((recipe, index) => {
-      const button = document.createElement("button");
-      button.className = "recipe-card";
-      button.innerHTML = `<strong>${recipe.title}</strong><br>${recipe.summary}`;
-      button.addEventListener("click", () => {
-        alert(`You selected: ${recipe.title}\nIngredients: ${recipe.ingredients.join(", ")}`);
-        // TODO: navigate to recipe detail page later
-      });
-      grid.appendChild(button);
+  recipes.forEach((recipe) => {
+    const button = document.createElement("button");
+    button.className = "recipe-card";
+    button.innerHTML = `<strong>${recipe.title}</strong><br>${recipe.summary}`;
+
+    button.addEventListener("click", () => {
+      // Store selected recipe if needed
+      localStorage.setItem("selectedRecipe", JSON.stringify(recipe));
+
+      // Navigate to camera.html
+      window.location.href = "camera.html";
     });
 
-    // Back button
-    document.getElementById("backButton").addEventListener("click", () => {
-      window.location.href = "index.html";
-    });
-  </script>
+    grid.appendChild(button);
+  });
+
+  // Back button
+  document.getElementById("backButton").addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
+</script>
 </body>
 </html>
