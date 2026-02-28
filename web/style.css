@@ -208,6 +208,153 @@ button:hover {
   pointer-events: none;
 }
 
+/* ── Instructions Page ── */
+.instr-page {
+  width: 100%;
+  height: 100vh;
+  background-color: #F0D9B5;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.step-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: #111;
+  padding: 28px 0 16px;
+  flex-shrink: 0;
+}
+
+.step-num-wrapper {
+  display: inline-block;
+  overflow: hidden;
+  height: 1.15em;
+  min-width: 0.8ch;
+}
+
+@keyframes stepExitUp {
+  to { transform: translateY(-120%); opacity: 0; }
+}
+@keyframes stepExitDown {
+  to { transform: translateY(120%); opacity: 0; }
+}
+@keyframes stepEnterFromBottom {
+  from { transform: translateY(120%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes stepEnterFromTop {
+  from { transform: translateY(-120%); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+.instr-main {
+  flex: 1;
+  display: flex;
+  gap: 40px;
+  padding: 0 40px;
+  min-height: 0;
+}
+
+.instr-cam {
+  flex: 1;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #d0d0d0;
+  display: flex;
+}
+
+.instr-cam camera-feed {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.instr-cam camera-feed video {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  display: block;
+}
+
+.instr-text-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.instr-text {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #111;
+  line-height: 1.6;
+  text-align: center;
+  max-width: 480px;
+}
+
+.instr-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px 30px;
+  flex-shrink: 0;
+}
+
+.instr-nav {
+  display: flex;
+  gap: 16px;
+}
+
+.instr-btn {
+  padding: 14px 48px;
+  border-radius: 10px;
+  border: none;
+  background: #2a2a2a;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: auto;
+  height: auto;
+  transition: background 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+}
+
+.instr-btn:hover:not(:disabled) {
+  background: #444;
+  transform: translateY(-2px);
+}
+
+.instr-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.instr-stats {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.stat-icon {
+  width: 34px;
+  height: 34px;
+}
+
 /* Recipes Page */
 
 /* Recipe grid */
