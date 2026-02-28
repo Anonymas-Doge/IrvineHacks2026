@@ -11,10 +11,24 @@
     <h1>What’s on the menu today?</h1>
     <div class="input-group">
       <input type="text" id="menuInput" placeholder="Enter what you would like to cook today">
-      <button id="goButton"></button>
+      <button id="goButton">Go</button>
     </div>
   </div>
 
-  <script src="main.js"></script>
+  <script>
+    document.getElementById("goButton").addEventListener("click", () => {
+      const inputValue = document.getElementById("menuInput").value.trim();
+      if (!inputValue) {
+        alert("Please enter a menu item!");
+        return;
+      }
+
+      // Save input to localStorage for next page
+      localStorage.setItem("menuInput", inputValue);
+
+      // Navigate to recipes page
+      window.location.href = "recipes.html";
+    });
+  </script>
 </body>
 </html>
