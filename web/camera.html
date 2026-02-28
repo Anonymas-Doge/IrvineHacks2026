@@ -4,28 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Position Yourself</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"> <!-- relative to project root, adjust if needed -->
   <style>
-    /* Additional styles specific to this page */
-    .video-container {
-      width: 640px;
-      height: 360px;
-      background-color: #ccc; /* grey placeholder */
-      margin: 20px auto;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
     .instructions {
       text-align: center;
       font-size: 1.2rem;
@@ -47,53 +27,38 @@
       background-color: #999;
     }
   </style>
+
+  <!-- Use relative path to load camera-feed.js from the same folder -->
+  <script src="./camera-feed.js" defer></script>
 </head>
 <body>
   <div class="container">
     <h1>Position yourself within frame.</h1>
     <p class="instructions">Your recipe will begin once you are entirely in frame</p>
 
-    <div class="video-container">
-      <video id="webcam" autoplay muted playsinline></video>
-    </div>
+    <!-- Reusable camera component -->
+    <camera-feed width="640" height="360"></camera-feed>
 
-    <!-- This button is just for simulation until Arduino is integrated -->
+    <!-- Simulation button -->
     <button id="simulateButton">Simulate In-Frame Detection</button>
   </div>
 
   <script>
-    const video = document.getElementById("webcam");
     const simulateButton = document.getElementById("simulateButton");
 
-    // Try to access the webcam
-    async function startWebcam() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream;
-      } catch (err) {
-        console.error("Error accessing webcam:", err);
-      }
-    }
-
-    startWebcam();
-
-    // Simulated detection of user in frame
     simulateButton.addEventListener("click", () => {
       alert("User detected in frame! Moving to next step...");
-      // TODO: later navigate to actual next page
+      // TODO: navigate to next page
       // window.location.href = "nextpage.html";
     });
 
-    // --- Future Arduino integration ---
-    // The Arduino will likely send a message via WebSocket or HTTP request
-    // Once the message is received, you can automatically move to next page
-    // Example:
+    // Placeholder for Arduino integration
     /*
     const socket = new WebSocket("ws://localhost:PORT");
     socket.onmessage = function(event) {
-        if (event.data === "in_frame") {
-            window.location.href = "nextpage.html";
-        }
+      if (event.data === "in_frame") {
+        window.location.href = "nextpage.html";
+      }
     };
     */
   </script>
