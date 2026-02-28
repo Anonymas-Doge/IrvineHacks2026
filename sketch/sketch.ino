@@ -29,9 +29,6 @@ void loop() {
     // Read temperature in Celsius from the sensor
     float celsius = thermo.getTemperature();
 
-    // Read humidity percentage from the sensor
-    float humidity = thermo.getHumidity();
-
-    Bridge.notify("record_sensor_samples", celsius, humidity);
+    Bridge.notify("record_sensor_samples", celsius);
   }
 }
