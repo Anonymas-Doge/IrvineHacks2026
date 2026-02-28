@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instructions</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="./camera-feed.js" defer></script>
+</head>
+<body>
+  <div class="instr-page">
+
+    <!-- Step number header -->
+    <div class="step-header">
+      Step&nbsp;<div class="step-num-wrapper" id="stepNumWrapper"><span>1</span></div>
+    </div>
+
+    <!-- Main content: webcam left, instruction text right -->
+    <div class="instr-main">
+      <div class="instr-cam">
+        <camera-feed></camera-feed>
+      </div>
+      <div class="instr-text-area">
+        <p class="instr-text" id="instrText"></p>
+      </div>
+    </div>
+
+    <!-- Bottom bar: nav buttons left, timer + temp right -->
+    <div class="instr-bottom">
+      <div class="instr-nav">
+        <button class="instr-btn" id="prevBtn">Prev Step</button>
+        <button class="instr-btn" id="nextBtn">Next Step</button>
+      </div>
+      <div class="instr-stats">
+        <div class="stat-item">
+          <svg class="stat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span id="timerDisplay">--:--</span>
+        </div>
+        <div class="stat-item">
+          <svg class="stat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+          </svg>
+          <span>--°F</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const recipe = JSON.parse(
+      localStorage.getItem("recipe") ||
+      '{"dish":"Demo","instructions":[[null,"No recipe loaded."]],"storageTime":0}'
+    );
+    const steps = recipe.instructions;
+    let currentStep = 0;
+    let timerInterval = null;
+    let typeTO = null;
+    let eraseTO = null;
+
+    // ── Timer ────────────────────────────────────────────────────────
+    function startTimer(minutes) {
+      clearInterval(timerInterval);
+      let secs = minutes * 60;
+      const el = document.getElementById("timerDisplay");
+      function tick() {
+        const m = Math.floor(secs / 60);
+        const s = secs % 60;
+        el.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+        if (secs > 0) secs--;
+        else clearInterval(timerInterval);
+      }
+      tick();
+      timerInterval = setInterval(tick, 1000);
+    }
+
+    function clearTimer() {
+      clearInterval(timerInterval);
+      document.getElementById("timerDisplay").textContent = "--:--";
+    }
+
+    // ── Step number animation ────────────────────────────────────────
+    function animateStepNum(num, direction) {
+      const wrapper = document.getElementById("stepNumWrapper");
+      const span = wrapper.querySelector("span");
+      const exitAnim = direction === "up"
+        ? "stepExitUp 0.25s ease forwards"
+        : "stepExitDown 0.25s ease forwards";
+      const enterAnim = direction === "up"
+        ? "stepEnterFromBottom 0.3s ease forwards"
+        : "stepEnterFromTop 0.3s ease forwards";
+
+      span.style.animation = exitAnim;
+      setTimeout(() => {
+        span.textContent = num;
+        span.style.animation = enterAnim;
+        setTimeout(() => { span.style.animation = ""; }, 320);
+      }, 260);
+    }
+
+    // ── Typewriter ───────────────────────────────────────────────────
+    function typeText(el, text) {
+      clearTimeout(typeTO);
+      clearTimeout(eraseTO);
+      el.textContent = "";
+      let i = 0;
+      function next() {
+        if (i <= text.length) {
+          el.textContent = text.slice(0, i++);
+          typeTO = setTimeout(next, 18);
+        }
+      }
+      next();
+    }
+
+    function eraseText(el, onDone) {
+      clearTimeout(typeTO);
+      clearTimeout(eraseTO);
+      function next() {
+        const t = el.textContent;
+        if (t.length > 0) {
+          el.textContent = t.slice(0, -1);
+          eraseTO = setTimeout(next, 10);
+        } else {
+          onDone();
+        }
+      }
+      next();
+    }
+
+    // ── Navigation ───────────────────────────────────────────────────
+    function updateButtons() {
+      document.getElementById("prevBtn").disabled = currentStep === 0;
+      document.getElementById("nextBtn").disabled = currentStep === steps.length - 1;
+    }
+
+    function applyStep(index, direction) {
+      const [time, text] = steps[index];
+      animateStepNum(index + 1, direction);
+      time != null ? startTimer(time) : clearTimer();
+      typeText(document.getElementById("instrText"), text);
+      updateButtons();
+    }
+
+    function goToStep(newIndex, direction) {
+      if (newIndex < 0 || newIndex >= steps.length) return;
+      currentStep = newIndex;
+      const instrEl = document.getElementById("instrText");
+      if (instrEl.textContent.length > 0) {
+        eraseText(instrEl, () => applyStep(newIndex, direction));
+      } else {
+        applyStep(newIndex, direction);
+      }
+    }
+
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      if (currentStep < steps.length - 1) goToStep(currentStep + 1, "up");
+    });
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      if (currentStep > 0) goToStep(currentStep - 1, "down");
+    });
+
+    // Start on step 1
+    applyStep(0, "up");
+    updateButtons();
+  </script>
+</body>
+</html>
