@@ -13,9 +13,10 @@
     <button id="backButton" style="width: 400px; height: 50px">I want to cook something else instead</button>
   </div>
 
-<script>
-  // Get the menu input from previous page
-  const menuInput = localStorage.getItem("menuInput") || "Your dish";
+  <script>
+    RECIPE_API_URL="http://127.0.0.1:5001"
+    // Get the menu input from previous page
+    const menuInput = localStorage.getItem("menuInput") || "Your dish";
 
   // Placeholder recipe data
   const recipes = [
@@ -26,21 +27,29 @@
 
   const grid = document.getElementById("recipeGrid");
 
-  recipes.forEach((recipe) => {
-    const button = document.createElement("button");
-    button.className = "recipe-card";
-    button.innerHTML = `<strong>${recipe.title}</strong><br>${recipe.summary}`;
-
-    button.addEventListener("click", () => {
-      // Store selected recipe if needed
-      localStorage.setItem("selectedRecipe", JSON.stringify(recipe));
-
-      // Navigate to camera.html
-      window.location.href = "camera.html";
+    ["easy", "medium", "hard"].forEach((difficulty, index) => {
+      const button = document.createElement("button");
+      button.className = "recipe-card";
+      button.innerHTML = `<strong>${menuInput}</strong><br>${difficulty}`;
+      button.addEventListener("click", () => {
+        alert(`You selected: ${menuInput}\nIngredients: ${difficulty}`);
+        fetch(`${RECIPE_API_URL}/chat?q=${menuInput}&difficulty=${difficulty}`)
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error('Error in network response');
+            }
+            return res.json()
+          })
+          .then((json) => {
+            localStorage.setItem("recipe", JSON.stringify(json));
+            console.log(JSON.stringify(localStorage.getItem("recipe")) || "None Returned!")
+          })
+        // TODO: navigate to recipe detail page later
+      });
+      grid.appendChild(button);
     });
 
     grid.appendChild(button);
-  });
 
   // Back button
   document.getElementById("backButton").addEventListener("click", () => {

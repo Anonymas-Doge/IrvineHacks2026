@@ -7,6 +7,50 @@ import google.genai as genai
 import json
 import re
 
+
+FAKE_DATA = """{
+	"dish": "Spaghetti and Meatballs",
+	"instructions": [
+		[
+			null,
+			"In a large bowl, combine 1 lb ground beef, 1/2 cup plain breadcrumbs, 1 large egg, 1 tsp garlic powder, 1 tsp onion powder, 1/2 tsp salt, 1/4 tsp black pepper, and 1/2 tsp dried oregano. Mix gently until just combined, being careful not to overmix."
+		],
+		[
+			null,
+			"Form the mixture into approximately 16-20 small meatballs."
+		],
+		[
+			null,
+			"Heat 1 tbsp olive oil in a large pot or deep skillet over medium-high heat. Add the meatballs and brown them on all sides, about 5-7 minutes. You don't need to cook them through."
+		],
+		[
+			null,
+			"Pour in one 24-oz jar of your favorite marinara sauce. Stir gently to coat the meatballs."
+		],
+		[
+			15,
+			"Bring the sauce to a gentle simmer, then reduce heat to low, cover, and let it cook for 15 minutes."
+		],
+		[
+			null,
+			"While the sauce simmers, bring a large pot of salted water to a rolling boil."
+		],
+		[
+			9,
+			"Add 12 oz spaghetti to the boiling water and cook according to package directions, typically 8-10 minutes, until al dente."
+		],
+		[
+			null,
+			"Carefully drain the cooked spaghetti."
+		],
+		[
+			null,
+			"Serve the spaghetti topped with meatballs and marinara sauce. Garnish with grated Parmesan cheese if desired."
+		]
+	],
+	"storageTime": 4
+}"""
+
 load_dotenv() # load env file
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -20,8 +64,10 @@ CORS(app)
 
 @app.route("/chat", methods=["GET"])
 def chat():
-    # data = flask.request.get_json(force=True)
-    # prompt = data.get("prompt")
+    return flask.jsonify(
+        parse_json(FAKE_DATA)
+    )
+    
     recipe = flask.request.args.get("q")
     difficulty = flask.request.args.get("difficulty")
 
@@ -114,8 +160,9 @@ def get_instruction(id="06ff1c50-c861-4585-a575-4ad9b9dd9707"):
 
 def parse_json(text):
     match = re.match(r"\{.*\}", text, re.S)
-    if not match: return TypeError("Not given valid json")
+    if not match: return {"error":"not a valid json"}
     return json.loads(match.group(0))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
+
