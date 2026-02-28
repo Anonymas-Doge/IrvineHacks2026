@@ -51,11 +51,13 @@ FAKE_DATA = """{
 	"storageTime": 4
 }"""
 
-load_dotenv() # load env file
+#load_dotenv() # load env file
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-if not GEMINI_API_KEY: raise RuntimeError("GEMINI API KEY NOT SET!")
-client = genai.Client(api_key=GEMINI_API_KEY)
+
+# ------- UN-COMMENT OUT WHEN WE USE THE REAL API --------------
+#GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+#if not GEMINI_API_KEY: raise RuntimeError("GEMINI API KEY NOT SET!")
+#client = genai.Client(api_key=GEMINI_API_KEY)
 
 RECIPE_URL = "https://recipe-api.com/api/v1/recipes"
 
