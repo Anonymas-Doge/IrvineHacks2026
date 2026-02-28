@@ -169,3 +169,4 @@ At that point, the device begins performing the following:
     ```
 
     This maintains the video classification stream, event callbacks, and WebSocket communication with the frontend.
+# IrvineHacks2026
