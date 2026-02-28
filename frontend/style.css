@@ -1,0 +1,11 @@
+body {
+  font-family: sans-serif;
+  text-align: center;
+  margin-top: 50px;
+}
+
+#data-output {
+  margin-top: 20px;
+  font-size: 1.2em;
+  color: #333;
+}
