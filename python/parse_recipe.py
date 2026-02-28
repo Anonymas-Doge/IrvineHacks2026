@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import os
 import requests
 import flask
@@ -76,11 +75,8 @@ def chat():
     except Exception as e:
         flask.abort(500, str(e))
 
-def parse_recipe():
-    ...
 # returns id of first recipe that fits query
 @app.route("/getRecipe")
-=======
 def parse_recipe(data):
     item_name = data["data"]["name"]
     instructions = []
@@ -91,7 +87,6 @@ def parse_recipe(data):
         temperature = i["structured"]["temperature"]["fahrenheit"] if i["structured"]["temperature"]["fahrenheit"] else None
         instructions.append((text, action, duration,  temperature))
     #return instructions
->>>>>>> 16ea7f175d7fdbe90621743f016d2c0d4f19c1ea
 def get_recipe():
     query_string = flask.request.args.get("q")
     res = requests.get(f"{RECIPE_URL}?q={query_string}", headers={
