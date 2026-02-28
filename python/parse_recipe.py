@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 import google.genai as genai
 import json
 import re
-
+import time
 
 FAKE_DATA = """{
 	"dish": "Spaghetti and Meatballs",
@@ -51,13 +51,13 @@ FAKE_DATA = """{
 	"storageTime": 4
 }"""
 
-#load_dotenv() # load env file
+load_dotenv() # load env file
 
 
 # ------- UN-COMMENT OUT WHEN WE USE THE REAL API --------------
-#GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-#if not GEMINI_API_KEY: raise RuntimeError("GEMINI API KEY NOT SET!")
-#client = genai.Client(api_key=GEMINI_API_KEY)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if not GEMINI_API_KEY: raise RuntimeError("GEMINI API KEY NOT SET!")
+client = genai.Client(api_key=GEMINI_API_KEY)
 
 RECIPE_URL = "https://recipe-api.com/api/v1/recipes"
 
@@ -66,9 +66,10 @@ CORS(app)
 
 @app.route("/chat", methods=["GET"])
 def chat():
-    return flask.jsonify(
-        parse_json(FAKE_DATA)
-    )
+    # time.sleep(4) # simulating time for
+    # return flask.jsonify(
+    #     parse_json(FAKE_DATA)
+    # )
     
     recipe = flask.request.args.get("q")
     difficulty = flask.request.args.get("difficulty")

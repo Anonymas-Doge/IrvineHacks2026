@@ -39,6 +39,8 @@
 
         const json = await response.json();
 
+        console.log(JSON.stringify(json))
+
         localStorage.setItem("recipe", JSON.stringify(json));
 
         // Navigate AFTER storing
