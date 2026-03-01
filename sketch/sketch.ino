@@ -40,20 +40,8 @@ void setup() {
   Serial.println(result);
   
   lcd.setBacklight(1);
-  Serial.println("Backlight ON");
   
   lcd.clear();
-  Serial.println("LCD Cleared");
-  
-  // Display test message
-  lcd.setPosition(0, 0);
-  lcd.print("Eyes Init");
-  Serial.println("Test message sent to LCD");
-  
-  delay(2000);
-  lcd.clear();
-  
-  Serial.println("LCD Ready - Eyes Active!");
 }
 
 void loop() {
