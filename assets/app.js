@@ -246,6 +246,7 @@ function initializeRecipePage() {
         }
         
         showLoading();
+
         
         // Send recipe request via socket.io
         socket.emit('recipe_request', {

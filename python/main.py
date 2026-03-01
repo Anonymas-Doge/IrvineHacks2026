@@ -90,6 +90,7 @@ def send_detections_to_ui(detections: dict):
 
 def handle_recipe_request(recipe_name: str, difficulty: str = "medium"):
     """Handle recipe requests"""
+    print("Handling Request")
     # Check preset recipes first
     if recipe_name.lower() in RECIPE_DATA:
         recipe = RECIPE_DATA[recipe_name.lower()]
@@ -139,6 +140,7 @@ def handle_recipe_request(recipe_name: str, difficulty: str = "medium"):
         )
         
         parsed_recipe = parse_json(response.text)
+        print("Sending back to application")
         ui.send_message("recipe", message=parsed_recipe)
         
     except Exception as e:
@@ -166,6 +168,12 @@ def override_threshold(sid, threshold):
 ui.on_message("recipe_request", lambda sid, data: handle_recipe_request(data.get("recipe"), data.get("difficulty")))
 ui.on_message("override_th", override_threshold)
 detection_stream.on_detect_all(send_detections_to_ui)
+
+# ui.on_message("api_call", process_api_call, data: dict)
+
+# def process_api_call(data: dict):
+#     """Handle API calls"""
+#     ui.send_message("api_response", message=data)
 
 # ============ RUN APPLICATION ============
 
