@@ -322,17 +322,24 @@
     }
 
     let lastThumbsUp = 0;
+    let thumbsUpCounter = 0; // must get to 5
     socket.on("detection", (data) => {
       if (data.content === "thumbs-up" && data.confidence >= .75) {
         const now = Date.now();
         if (now - lastThumbsUp < 6000) return;
+        if (thumbsUpCounter < 5) {
+          thumbsUpCounter++;
+          return;
+        }
         lastThumbsUp = now;
         if (currentStep < steps.length - 1) {
+          thumbsUpCounter = 0
           goToStep(currentStep + 1, "up");
         } else {
+          thumbsUpCounter = 0;
           window.location.href = "finish.html";
         }
-      }
+      } 
     });
 
     window.addEventListener("beforeunload", () => { clearInterval(intervalId); });
