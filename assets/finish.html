@@ -5,12 +5,177 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Done!</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <style>
+
+    .finish-page {
+      background-image: url('images/home_screen_bg.png');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+      font-family: 'Lato', sans-serif;
+    }
+
+    /* Soft warm wash over the whole page */
+    .finish-page::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(240, 218, 185, 0.55);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .finish-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+
+      /* Glass card */
+      background: rgba(255, 250, 240, 0.22);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid rgba(255, 245, 220, 0.45);
+      border-radius: 24px;
+      padding: 52px 64px 48px;
+      box-shadow:
+        0 8px 40px rgba(42, 28, 14, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -1px 0 rgba(180, 130, 60, 0.1);
+      min-width: 480px;
+      max-width: 560px;
+    }
+
+    /* Eyebrow label */
+    .finish-eyebrow {
+      font-family: 'Lato', sans-serif;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(87, 53, 12, 0.7);
+      margin-bottom: 2px;
+    }
+
+    /* Main title */
+    .finish-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 4.2rem;
+      font-weight: 900;
+      color: #1b1008;
+      line-height: 1;
+      margin: 0 0 2px;
+      letter-spacing: -1px;
+    }
+
+    /* Dish name */
+    .finish-dish {
+      font-family: 'Lato', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      font-style: italic;
+      color: rgba(42, 28, 14, 0.6);
+      margin: 0;
+    }
+
+    /* Thin amber divider */
+    .finish-divider {
+      width: 40px;
+      height: 1.5px;
+      background: rgba(180, 110, 30, 0.35);
+      border-radius: 2px;
+      margin: 12px 0 8px;
+    }
+
+    /* Storage line */
+    .finish-storage {
+      font-family: 'Lato', sans-serif;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+      color: rgba(42, 28, 14, 0.5);
+      margin: 0 0 8px;
+    }
+
+    /* Action buttons */
+    .finish-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .finish-action-btn {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 13px 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: auto;
+      height: auto;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+
+      background: #2A1C14;
+      color: rgba(240, 217, 181, 0.95);
+      border: 1px solid rgba(42, 28, 20, 0.8);
+      box-shadow: 0 2px 12px rgba(42, 28, 20, 0.2);
+    }
+
+    .finish-action-btn:hover {
+      background: #1a0f08;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(42, 28, 20, 0.28);
+    }
+
+    .finish-action-btn-outline {
+      background: rgba(255, 255, 255, 0.28);
+      color: #2A1C14;
+      border: 1px solid rgba(42, 28, 20, 0.2);
+      box-shadow: none;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .finish-action-btn-outline:hover {
+      background: rgba(255, 255, 255, 0.45);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(42, 28, 20, 0.1);
+    }
+
+    /* Print styles — untouched */
+    .print-recipe { display: none; }
+
+    @media print {
+      body * { visibility: hidden; cursor: default !important; }
+      .print-recipe, .print-recipe * { visibility: visible; }
+      .print-recipe {
+        display: block;
+        position: fixed;
+        inset: 0;
+        padding: 40px;
+        font-family: Arial, sans-serif;
+        background: white;
+        color: black;
+      }
+      .print-recipe h2 { font-size: 2rem; margin-bottom: 20px; }
+      .print-recipe ol { font-size: 1rem; line-height: 1.8; padding-left: 20px; margin-bottom: 20px; }
+      .print-recipe p { font-style: italic; color: #555; }
+    }
+
+  </style>
 </head>
 <body>
   <div class="finish-page">
     <div class="finish-content">
+      <p class="finish-eyebrow">Recipe Complete</p>
       <h1 class="finish-title">All done!</h1>
       <p class="finish-dish" id="finishDish"></p>
+      <div class="finish-divider"></div>
       <p class="finish-storage" id="finishStorage"></p>
       <div class="finish-actions">
         <button class="finish-action-btn" id="cookAgainBtn">Cook Another Meal</button>
