@@ -27,6 +27,7 @@ sb = create_client(SUPABASE_URL, SUPABASE_KEY)
 def upsert_recipe(category: str, recipe: dict):
     instructions = [{"time": s[0], "step": s[1]} for s in recipe.get("instructions", [])]
     try:
+        sb.table("recipes").delete().neq("id", "00000000-0000-0000-0000-000000000000").execute();
         sb.table("recipes").upsert({
             "category": category.lower(),
             "dish": recipe.get("dish", ""),
