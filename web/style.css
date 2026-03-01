@@ -141,7 +141,7 @@ button:hover {
 .search-icon {
   width: 20px;
   height: 20px;
-  color: #888;
+  color: #444;
   margin-right: 12px;
   flex-shrink: 0;
 }
