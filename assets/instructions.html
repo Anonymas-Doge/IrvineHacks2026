@@ -5,7 +5,233 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Instructions</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,900;1,400&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+
+    /* ── Page shell ── */
+    .instr-page {
+      background: #0e0b08;
+      background-image: url('images/home_screen_bg.png');
+      background-size: cover;
+      background-position: center;
+      font-family: 'Lato', sans-serif;
+    }
+
+    /* Dark tinted wash — modern, moody */
+    .instr-page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: rgba(10, 7, 4, 0.72);
+      opacity: 1;
+      transition: opacity 0.4s ease;
+      z-index: 0;
+    }
+
+    /* temp-danger overrides the wash with red */
+    .instr-page.temp-danger::before {
+      background:
+        radial-gradient(ellipse at center,
+          rgba(10, 7, 4, 0.72) 40%,
+          rgba(180, 20, 0, 0.55) 75%,
+          rgba(120, 0, 0, 0.85) 100%
+        );
+      opacity: 1;
+    }
+
+    .instr-page > * { position: relative; z-index: 2; }
+
+    /* ── Step header ── */
+    .step-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: baseline;
+      padding: 32px 48px 0;
+      gap: 10px;
+      flex-shrink: 0;
+
+      font-family: 'Lato', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(214, 156, 80, 0.7);
+    }
+
+    .step-num-wrapper {
+      display: inline-block;
+      overflow: hidden;
+      height: 3em;
+      min-width: 0.8ch;
+    }
+
+    .step-num-wrapper span {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 900;
+      color: rgba(214, 156, 80, 0.7);
+      background: none;
+      -webkit-text-fill-color: rgba(214, 156, 80, 0.7);
+      text-shadow: none;
+    }
+
+    /* ── Main area ── */
+    .instr-main {
+      flex: 1;
+      display: flex;
+      gap: 32px;
+      padding: 20px 48px;
+      min-height: 0;
+    }
+
+    /* ── Camera ── */
+    .instr-cam {
+      flex: 1;
+      border-radius: 16px;
+      overflow: visible !important;
+      background: #1a1208;
+      box-shadow:
+        0 0 0 1.5px rgba(214, 156, 80, 0.6),
+        0 0 24px 4px rgba(214, 156, 80, 0.2),
+        0 0 60px 10px rgba(180, 100, 20, 0.1),
+        0 24px 64px rgba(0, 0, 0, 0.5);
+      animation: cf-pulse 3s ease-in-out infinite;
+      display: flex;
+    }
+
+    /* make sure the iframe/video inside clips correctly */
+    #videoFeedContainer {
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    @keyframes cf-pulse {
+      0%, 100% {
+        box-shadow:
+          0 0 0 1.5px rgba(214, 156, 80, 0.6),
+          0 0 24px 4px rgba(214, 156, 80, 0.2),
+          0 0 60px 10px rgba(180, 100, 20, 0.1),
+          0 24px 64px rgba(0, 0, 0, 0.5);
+      }
+      50% {
+        box-shadow:
+          0 0 0 1.5px rgba(230, 175, 90, 0.9),
+          0 0 32px 8px rgba(214, 156, 80, 0.35),
+          0 0 80px 16px rgba(180, 100, 20, 0.18),
+          0 24px 64px rgba(0, 0, 0, 0.5);
+      }
+    }
+
+    /* ── Text area ── */
+    .instr-text-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 8px;
+    }
+
+    .instr-text {
+      font-family: 'Lato', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      font-style: italic;
+      color: #f5e8d0;
+      line-height: 1.85;
+      text-align: left;
+      max-width: 460px;
+      width: 100%;
+
+      /* Subtle divider line on left */
+      border-left: 2px solid rgba(214, 156, 80, 0.5);
+      padding-left: 28px;
+    }
+
+    /* ── Bottom bar ── */
+    .instr-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 48px 28px;
+      flex-shrink: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* ── Nav buttons ── */
+    .instr-nav { display: flex; gap: 10px; }
+
+    .instr-btn {
+      font-family: 'Lato', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 12px 28px;
+      border-radius: 6px;
+      border: 1px solid rgba(214, 156, 80, 0.35);
+      background: rgba(214, 156, 80, 0.08);
+      color: rgba(214, 156, 80, 0.9);
+      cursor: pointer;
+      width: auto;
+      height: auto;
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .instr-btn:hover:not(:disabled) {
+      background: rgba(214, 156, 80, 0.18);
+      border-color: rgba(214, 156, 80, 0.7);
+      transform: translateY(-1px);
+    }
+
+    .instr-btn:disabled {
+      opacity: 0.2;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .instr-btn-finish {
+      background: rgba(80, 140, 60, 0.15);
+      border-color: rgba(100, 180, 70, 0.4);
+      color: rgba(160, 220, 130, 0.9);
+    }
+
+    .instr-btn-finish:hover:not(:disabled) {
+      background: rgba(80, 140, 60, 0.28);
+      border-color: rgba(100, 180, 70, 0.7);
+    }
+
+    /* ── Stats ── */
+    .instr-stats { display: flex; align-items: center; gap: 12px; }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Lato', sans-serif;
+      font-size: 1rem;
+      font-weight: 300;
+      color: rgba(245, 232, 208, 0.85);
+      letter-spacing: 0.5px;
+
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 8px 18px 8px 12px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .stat-icon {
+      width: 18px;
+      height: 18px;
+      stroke: rgba(214, 156, 80, 0.6);
+      flex-shrink: 0;
+    }
+
+  </style>
 </head>
 <body>
   <div class="instr-page">
@@ -53,16 +279,10 @@
       </div>
     </div>
 
-    <!-- Audio -->
-     <audio id="ringAudio">
-      <source src="audio/Timer.mp3" type="audio/mpeg">
-     </audio>
-     <audio id="tickAudio">
-      <source src="audio/tick.mp3" type="audio/mpeg">
-     </audio>
-     <audio id="alarmAudio">
-      <source src="audio/Alarm.mp3" type="audio.mpeg">
-     </audio>
+    <!-- Audio — untouched -->
+    <audio id="ringAudio"><source src="audio/Timer.mp3" type="audio/mpeg"></audio>
+    <audio id="tickAudio"><source src="audio/tick.mp3" type="audio/mpeg"></audio>
+    <audio id="alarmAudio"><source src="audio/Alarm.mp3" type="audio.mpeg"></audio>
   </div>
 
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
@@ -103,7 +323,6 @@
 
     let lastThumbsUp = 0;
     socket.on("detection", (data) => {
-      // console.log("Detection received:", data);
       if (data.content === "thumbs-up" && data.confidence >= .75) {
         const now = Date.now();
         if (now - lastThumbsUp < 6000) return;
@@ -113,9 +332,7 @@
         } else {
           window.location.href = "finish.html";
         }
-      }// else if (data.content === "thumbs-down" && data.confidence >= .75) {
-      //  if (currentStep > 0) goToStep(currentStep - 1, "down");
-      //}
+      }
     });
 
     window.addEventListener("beforeunload", () => { clearInterval(intervalId); });
@@ -126,8 +343,9 @@
     let typeTO = null;
     let eraseTO = null;
 
-    timerRingAudio = document.getElementById("ringAudio")
-    tickAudio = document.getElementById("tickAudio")
+    timerRingAudio = document.getElementById("ringAudio");
+    tickAudio = document.getElementById("tickAudio");
+
     // ── Timer ────────────────────────────────────────────────────────
     function startTimer(minutes) {
       clearInterval(timerInterval);
@@ -139,15 +357,15 @@
         el.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
         if (secs < 20) {
           if (tickAudio.paused) {
-            tickAudio.currentTime = 0
-            tickAudio.play()
+            tickAudio.currentTime = 0;
+            tickAudio.play();
           }
         }
         if (secs > 0) secs--;
         else {
-          tickAudio.pause()
-          timerRingAudio.currentTime = 0
-          timerRingAudio.play()
+          tickAudio.pause();
+          timerRingAudio.currentTime = 0;
+          timerRingAudio.play();
           clearInterval(timerInterval);
         }
       }
@@ -158,9 +376,9 @@
     function clearTimer() {
       clearInterval(timerInterval);
       document.getElementById("timerDisplay").textContent = "--:--";
-      timerRingAudio.pause()
+      timerRingAudio.pause();
       timerRingAudio.currentTime = 0;
-      tickAudio.pause()
+      tickAudio.pause();
       tickAudio.currentTime = 0;
     }
 
@@ -274,7 +492,6 @@
         steps.push(...instructions);
         loaded = true;
       }
-    
 
       if (!loaded) {
         console.log('[Supabase] Using localStorage fallback');
@@ -289,7 +506,7 @@
       console.log('[Supabase] Final steps array:', steps);
       applyStep(0, 'up');
       updateButtons();
-      updateTemperature(72); // default temp, can be updated by backend later
+      updateTemperature(72);
     })();
   </script>
 
