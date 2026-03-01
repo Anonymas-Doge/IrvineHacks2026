@@ -29,12 +29,13 @@ body {
 
 /* Headings scoped to container so it doesn't break the home page */
 .container h1 {
-  font-family: 'Georgia', serif; /* Elegant serif for the Minimalist Tan theme */
+  font-family: 'Georgia', serif;
   font-size: 2.8rem;
   margin-bottom: 3rem;
   font-weight: 400;
   letter-spacing: 0.5px;
-  color: #2A1C14;
+  color: #3e3e06;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* First page input group */
@@ -67,11 +68,28 @@ button:hover {
   background-color: #999;
 }
 
+/* ── Background ── */
+#bgPanorama {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url('images/down_pano.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  background-repeat: no-repeat;
+}
+
+/* ── Recipes wrapper (full-screen shell for slide-in) ── */
+.recipes-wrapper {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* ── Home Page ── */
 .home-container {
-  background-image: url('images/home_screen_bg.png');
-  background-size: cover;
-  background-position: center right;
   border-radius: 0;
   width: 100%;
   max-width: 100%;
@@ -114,6 +132,7 @@ button:hover {
   align-items: center;
   text-align: center;
   padding: 0 30px 80px;
+  color: #808000
 }
 
 .home-container h1 {
@@ -121,15 +140,22 @@ button:hover {
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 28px;
-  color: #111;
+  background: linear-gradient(to top, #ffffff 0%, rgba(40, 40, 4, 1) 0%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   text-align: center;
   font-family: 'Arial', sans-serif; /* Preserving original home font */
+  text-shadow: none;
 }
 
 .search-group {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 40px;
   padding: 14px 22px;
   width: fit-content;
@@ -151,17 +177,23 @@ button:hover {
   outline: none;
   background: transparent;
   font-size: 1.05rem;
-  color: #444;
+  color: #fff;
   width: 300px;
   padding: 0;
+}
+
+.search-group input[type="text"]::placeholder {
+  color: #3d1f0a;
 }
 
 .go-btn {
   margin-left: 12px;
   padding: 8px 20px;
   border-radius: 30px;
-  border: none;
-  background: #2a2a2a;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(70, 70, 8, 0.6);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: #fff;
   font-size: 1rem;
   font-weight: 600;
@@ -173,7 +205,7 @@ button:hover {
 }
 
 .go-btn:hover {
-  background: #444;
+  background: #808000;
   transform: translateY(-1px);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
 }
@@ -188,11 +220,13 @@ button:hover {
 .tag-btn {
   padding: 10px 24px;
   border-radius: 30px;
-  border: 1.5px solid #2a2a2a;
-  background: rgba(255, 255, 255, 0.466);
+  border: 1.5px solid rgba(70, 70, 8, 0.8);
+  background: rgba(70, 70, 8, 0.3);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   font-size: 1rem;
   cursor: pointer;
-  color: #1a1a1a;
+  color: #fff;
   font-weight: 500;
   width: auto;
   height: auto;
@@ -200,7 +234,7 @@ button:hover {
 }
 
 .tag-btn:hover {
-  background: #2a2a2a;
+  background: #808000;
   color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -492,26 +526,28 @@ button:hover {
 .recipe-card {
   width: 200px;
   height: 200px;
-  background-color: #FCF8F2; /* Creamy off-white */
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 12px 24px rgba(42, 28, 20, 0.08); /* Soft brown-tinted shadow */
+  background: rgba(70, 70, 8, 0.452);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   cursor: pointer;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
   font-family: 'Georgia', serif;
   font-size: 1.1rem;
-  color: #4A3B32; /* Medium brown for the difficulty text */
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .recipe-card:hover {
-  background-color: #FCF8F2; /* Keep it consistent */
+  background: rgba(90, 90, 0, 0.712);
   transform: translateY(-5px);
-  box-shadow: 0 16px 32px rgba(42, 28, 20, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
 }
 
 .recipe-card strong {
@@ -520,24 +556,26 @@ button:hover {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #1A110C; /* Near-black espresso */
+  color: #fff;
   margin-bottom: 0.5rem;
 }
 
 /* Back button styling */
 #backButton {
-  background: transparent;
-  border: 1px solid #2A1C14;
-  border-radius: 50px; /* Sleek pill shape */
+  background: rgba(70, 70, 8, 0.452);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50px;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 0.95rem;
   font-weight: 500;
-  color: #2A1C14;
+  color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 #backButton:hover {
-  background-color: #2A1C14;
-  color: #D6B58D; /* Returns to the tan color on hover */
+  background: rgba(90, 90, 0, 0.712);
+  border-color: rgba(255, 255, 255, 0.6);
 }

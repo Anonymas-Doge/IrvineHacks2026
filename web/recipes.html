@@ -7,12 +7,18 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Which recipe would you like to use?</h1>
-    <div class="recipe-grid" id="recipeGrid"></div>
-    <button id="backButton" style="width: 400px; height: 50px">
-      I want to cook something else instead
-    </button>
+  <!-- bgPanorama lives outside recipesWrapper so the SPA path reuses index.html's instance.
+       On direct navigation it provides the right 66% background immediately. -->
+  <div id="bgPanorama"></div>
+
+  <div class="recipes-wrapper" id="recipesWrapper">
+    <div class="container">
+      <h1>Which recipe would you like to use?</h1>
+      <div class="recipe-grid" id="recipeGrid"></div>
+      <button id="backButton" style="width: 400px; height: 50px">
+        I want to cook something else instead
+      </button>
+    </div>
   </div>
 
   <script>
