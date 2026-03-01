@@ -541,3 +541,32 @@ button:hover {
   background-color: #2A1C14;
   color: #D6B58D; /* Returns to the tan color on hover */
 }
+
+/* Danger temperature border */
+.instr-page {
+  position: relative;
+}
+
+/* Red gradient overlay (hidden by default) */
+.instr-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+
+  /* Dark red edges fading to transparent center */
+  background:
+    radial-gradient(ellipse at center,
+      rgba(255, 0, 0, 0) 60%,
+      rgba(255, 0, 0, 0.15) 75%,
+      rgba(180, 0, 0, 0.4) 90%,
+      rgba(120, 0, 0, 0.65) 100%
+    );
+}
+
+/* Active danger state */
+.instr-page.temp-danger::before {
+  opacity: 1;
+}

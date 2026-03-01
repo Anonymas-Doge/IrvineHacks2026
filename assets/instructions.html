@@ -48,7 +48,7 @@
           <svg class="stat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
           </svg>
-          <span>--°F</span>
+          <span id="tempDisplay">--°F</span>
         </div>
       </div>
     </div>
@@ -87,6 +87,20 @@
 
     socket.on("connect", () => { console.log("Connected to server"); });
     socket.on("disconnect", () => { console.log("Disconnected from server"); });
+
+    function updateTemperature(tempF) {
+      const tempEl = document.getElementById("tempDisplay");
+      const page = document.querySelector(".instr-page");
+
+      tempEl.textContent = `${tempF}°F`;
+
+      if (tempF > 200) {
+        page.classList.add("temp-danger");
+      } else {
+        page.classList.remove("temp-danger");
+      }
+    }
+
     let lastThumbsUp = 0;
     socket.on("detection", (data) => {
       // console.log("Detection received:", data);
@@ -275,6 +289,7 @@
       console.log('[Supabase] Final steps array:', steps);
       applyStep(0, 'up');
       updateButtons();
+      updateTemperature(72); // default temp, can be updated by backend later
     })();
   </script>
 
