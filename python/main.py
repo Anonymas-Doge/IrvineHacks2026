@@ -15,10 +15,6 @@ detection_stream = VideoObjectDetection(confidence=0.5, debounce_sec=0.0)
 
 ui.on_message("override_th", lambda sid, threshold: detection_stream.override_threshold(threshold))
 # Example usage: Register a callback for when a specific object is detected
-def person_detected():
-  pass  # Implement your logic here, e.g., send a notification
-
-# detection_stream.on_detect("person", person_detected)
 
 def record_sensor_samples(celsius: float):
     if celsius is None or not isinstance(celsius, (int, float)):
@@ -40,4 +36,4 @@ def send_detections_to_ui(detections: dict):
 
 detection_stream.on_detect_all(send_detections_to_ui)
 
-App.run(host='0.0.0.0', port=5000)
+App.run()
