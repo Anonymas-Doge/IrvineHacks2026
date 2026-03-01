@@ -3,6 +3,9 @@ description: ""
 ports: []
 bricks:
 - arduino:web_ui: {}
-- arduino:video_image_classification:
-    model: person-classification
+- arduino:video_object_detection: {
+        variables: {
+            EI_OBJ_DETECTION_MODULE: /home/arduino/.arduino-bricks/ei-models/model.eim
+        }
+    }
 icon: 😀

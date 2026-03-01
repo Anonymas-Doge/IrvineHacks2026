@@ -71,4 +71,4 @@ def send_detections_to_ui(classifications: dict):
 
 detection_stream.on_detect_all(send_detections_to_ui)
 
-App.run()
+App.run(host='0.0.0.0', port=5000)
