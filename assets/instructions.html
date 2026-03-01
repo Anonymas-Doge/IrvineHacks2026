@@ -86,7 +86,7 @@
 
     socket.on("connect", () => { console.log("Connected to server"); });
     socket.on("disconnect", () => { console.log("Disconnected from server"); });
-    socket.on("detect", (data) => { console.log("Detection received:", data); });
+    socket.on("detection", (data) => { console.log("Detection received:", data); });
 
     window.addEventListener("beforeunload", () => { clearInterval(intervalId); });
 
