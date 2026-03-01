@@ -145,7 +145,7 @@ def handle_recipe_request(recipe_name: str, difficulty: str = "medium"):
                       ],
                       "storageTime": number_of_days
                     }
-                    Return only raw JSON, no markdown wrapping.'''
+                    Return only raw JSON, no markdown wrapping. **DO NOT RETURN WITH ```JSON WRAPPED, ENSURE ITS PURE VALID JSON**'''
                 }]
             },
             {
@@ -158,8 +158,9 @@ def handle_recipe_request(recipe_name: str, difficulty: str = "medium"):
             model="gemini-2.5-flash",
             contents=content
         )
-        
+        print("raw response", response.text)
         parsed_recipe = parse_json(response.text)
+        print("parsed response", parsed_recipe)
         print("Sending back to application")
         upsert_recipe(recipe_name, parsed_recipe)
         ui.send_message("recipe", message=parsed_recipe)
