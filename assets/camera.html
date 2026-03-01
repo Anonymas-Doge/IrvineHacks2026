@@ -9,8 +9,8 @@
     /* Page-specific styles */
     .camera-container {
       width: 100%;
-      max-width: 640px;
-      height: 480px;
+      max-width: 660px;
+      height: 500px;
       margin: 20px auto;
       border: 2px solid #333;
       border-radius: 10px;
@@ -60,26 +60,36 @@
       margin-top: 20px;
     }
 
-    /* Button styling */
-    button {
-      display: block;
-      margin: 20px auto 0;
-      padding: 12px 25px;
-      border: none;
-      border-radius: 25px;
-      background-color: #B0B0B0;
-      cursor: pointer;
+    /* Button row */
+    .camera-btns {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 24px;
+    }
+
+    .camera-btns button {
+      display: inline-block;
+      margin: 0;
+      padding: 10px 28px;
+      border-radius: 50px;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      background: #46460873;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: rgba(255, 255, 255, 0.9);
       font-size: 1rem;
-      transition: all 0.3s ease;
-      width: 400px;
+      font-weight: 500;
+      cursor: pointer;
+      width: auto;
+      height: auto;
+      transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
     }
 
-    button:hover {
-      background-color: #999;
-    }
-
-    button:active {
-      background-color: #777;
+    .camera-btns button:hover {
+      background: rgba(90, 90, 0, 0.712);
+      border-color: rgba(255, 255, 255, 0.6);
+      transform: translateY(-2px);
     }
   </style>
 </head>
@@ -99,11 +109,10 @@
       </div>
     </div>
 
-    <!-- Simulation button -->
-    <button id="simulateButton">Manually skip ahead to recipe</button>
-
-    <!-- Back button -->
-    <button id="backButton">Select a different recipe</button>
+    <div class="camera-btns">
+      <button id="simulateButton">Manually skip ahead to recipe</button>
+      <button id="backButton">Select a different recipe</button>
+    </div>
   </div>
 
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
