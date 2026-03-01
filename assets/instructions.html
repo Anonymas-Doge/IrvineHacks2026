@@ -92,7 +92,7 @@
       // console.log("Detection received:", data);
       if (data.content === "thumbs-up" && data.confidence >= .75) {
         const now = Date.now();
-        if (now - lastThumbsUp < 4000) return;
+        if (now - lastThumbsUp < 6000) return;
         lastThumbsUp = now;
         if (currentStep < steps.length - 1) {
           goToStep(currentStep + 1, "up");
