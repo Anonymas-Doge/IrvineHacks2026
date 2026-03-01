@@ -1,1 +1,25 @@
-# IrvineHacks2026
+# APPetite
+# Inspiration
+As a team of first-years, we were discussing how anxious we are about having to cook meals for ourselves next year having little to no cooking experience. We talked about how difficult it is to traverse many cooking recipes, joking about "burning the apartment down". This was when inspiration struck us: we decided to create a cooking assistant that not only allows users to view recipes step-by-step without having to manually traverse through a list of steps, but also ensures that the cooking environment is safe.
+
+# What does APPetite do?
+APPetite is a cooking assistant that allows users to easily create dishes based on difficulty level. The webpage itself uses user input to generate a recipe for the dish that the user inputs. The user can additionally indicate the recipe difficulty level that they would like, ranging from easy to hard. Once the recipe level has been selected, the user is then prompted to position themselves in frame of the arduino's webcam; once they are in frame, the webpage will go ahead and display the first step to the recipe. Once the user is done with that step, they can make a thumbs-up gesture, which will make the program move on to the next step (This makes it easy to navigate through the recipe even if the user cannot manually click the "next" button!). At any point, if the dish seems to be burning and the room temperature increases past a safe limit, the page will notify the user visually and audibly. Additionally, any steps that have specific time constraints will have a timer displayed and counting down below the instructions. This repeats until the program reaches the end of the recipe, following which the user can either download a pdf of the recipe for future use or go back to the initial input page to generate a new recipe.
+
+Overall, APPetite helps users cook dishes with ease and prioritizes their safety!
+
+# How we built it
+APPetite utilizes Qualcomm's Arduino Uno Q to check the temperature of the environment using the arduino's temperature sensor and to detect the presence of the user in frame as well as the user's gestures using a webcam. Additionally, we utilized the Uno Q's built-in person detection model to detect the presence of users in frame, and we created and trained our own AI model using live data with Edge Impulse to detect specific gestures (thumbs-ups, thumbs-downs, and palms). These models were both used for the continual traversing of the recipe steps. All frontend components are programmed using HTML, CSS, and Javascript, and are able to transition between pages using references to one another; and we used Figma to draft out what each page of the frontend would look like. Finally, we used the GenAI API to create formatted recipes based on user input that we could easily display step-by-step, and made API calls using functionalities found within the arduino itself. We used Supabase to create a database that we saved all API call data to, and used this database whenever we needed to access recipe data to utilize in the frontend.
+
+# Challenges we ran into
+A major issue we ran into was integrating the hardware and the software. In order to maintain modularity with our programming and to ensure that we got the most work done as possible, we completely split up hardware components, software components, and backend API calls. However, once we were finally at a stage where we could merge the hardware and software, we realized that our software, which was primarily programmed using HTML/CSS/Javascript, was not really compatible with the arduino's backend code. It took us hours (which became an entirely sleepless night) to debug this, and ended up having to entirely move and refactor our entire frontend, following which our API calls stopped working. Altogether, integrating each individual part took an extremely large amount of debugging, patience, and sacrifice (of a lot of sleep).
+
+Additionally, 3 of our 4 team members entered the hackathon with no prior hardware experience, and, being completely new, the Arduino Uno Q was extremely difficult to work with and understand due to its lack of documentation. Thus, we ended up wasting a lot of time implementing code that we later realized was not compatible with the system we were working with because we didn't fully understand the tools that we had.
+
+# Accomplishments that we're proud of
+We are extremely proud of how much we were able to learn and achieve after entering the hackathon with little to no knowledge of the topic. Having entered the hackathon with very little hardware knowledge or experience, we were still able to create a functional project despite our various struggles and mistakes.
+
+# What we learned
+We learned an extremely large amount of hardware programming and development in just 36 hours. We learned how to program using an arduino, how to design and develop a webpage from scratch,
+
+# What's next for APPetite
+In the future, we would ideally like to implement a login feature, which users could potentially use to save recipes to their accounts or even share them online.
