@@ -13,7 +13,6 @@ let errorContainer = document.getElementById('error-container');
 document.addEventListener('DOMContentLoaded', () => {
     initSocketIO();
     initializeConfidenceSlider();
-    initializeRecipePage();
     updateFeedback(null);
     renderDetections();
 
@@ -65,15 +64,6 @@ function initSocketIO() {
         updateFeedback(message);
     });
 
-    socket.on('recipe', (message) => {
-        displayRecipe(message);
-        hideLoading();
-    });
-
-    socket.on('recipe_error', (message) => {
-        displayError(message.message || 'Unknown error occurred');
-        hideLoading();
-    });
 }
 
 function updateFeedback(detection) {
@@ -227,94 +217,4 @@ function resetConfidence() {
     confidenceSlider.value = '0.5';
     confidenceInput.value = '0.50';
     updateConfidenceDisplay();
-}
-
-function initializeRecipePage() {
-    const goButton = document.getElementById("goButton");
-    const menuInput = document.getElementById("menuInput");
-    const difficultySelect = document.getElementById("difficultySelect");
-    
-    if (!goButton) return; // Exit if not on recipe page
-    
-    goButton.addEventListener("click", () => {
-        const recipe = menuInput.value.trim();
-        const difficulty = difficultySelect.value;
-        
-        if (!recipe) {
-            alert("Please enter a menu item!");
-            return;
-        }
-        
-        showLoading();
-        
-        // Send recipe request via socket.io
-        socket.emit('recipe_request', {
-            recipe: recipe,
-            difficulty: difficulty
-        });
-    });
-    
-    // Enter key support
-    menuInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-            goButton.click();
-        }
-    });
-}
-
-function displayRecipe(recipe) {
-    const recipeDisplay = document.getElementById("recipeDisplay");
-    if (!recipeDisplay) return;
-    
-    let html = `
-        <div class="recipe-container">
-            <h2>${recipe.dish || "Recipe"}</h2>
-            <div class="recipe-info">
-                <span>Storage Time: ${recipe.storageTime || "Unknown"} days</span>
-            </div>
-            <div class="instructions">
-                <h3>Instructions:</h3>
-                <ol>
-    `;
-    
-    if (recipe.instructions && Array.isArray(recipe.instructions)) {
-        recipe.instructions.forEach((step, index) => {
-            const timeStr = step[0] ? `<span class="time-badge">${step[0]} min</span>` : '';
-            const instruction = step[1] || '';
-            html += `<li>${timeStr} ${instruction}</li>`;
-        });
-    }
-    
-    html += `
-                </ol>
-            </div>
-        </div>
-    `;
-    
-    recipeDisplay.innerHTML = html;
-}
-
-function displayError(message) {
-    const recipeDisplay = document.getElementById("recipeDisplay");
-    if (!recipeDisplay) return;
-    
-    recipeDisplay.innerHTML = `
-        <div class="error-message">
-            <p>Error: ${message}</p>
-        </div>
-    `;
-}
-
-function showLoading() {
-    const loadingSpinner = document.getElementById("loadingSpinner");
-    if (loadingSpinner) {
-        loadingSpinner.style.display = "block";
-    }
-}
-
-function hideLoading() {
-    const loadingSpinner = document.getElementById("loadingSpinner");
-    if (loadingSpinner) {
-        loadingSpinner.style.display = "none";
-    }
 }

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Position Yourself</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Page-specific styles */
+    .camera-container {
+      width: 100%;
+      max-width: 1024px;
+      height: 768px;
+      margin: 20px auto;
+      border: 2px solid #333;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000;
+      position: relative;
+    }
+
+    #videoFeedContainer {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      position: relative;
+    }
+
+    #videoPlaceholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+
+    #videoPlaceholder img {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 20px;
+    }
+
+    #dynamicIframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .instructions {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+
+    /* Button styling */
+    button {
+      display: block;
+      margin: 20px auto 0;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 25px;
+      background-color: #B0B0B0;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      width: 400px;
+    }
+
+    button:hover {
+      background-color: #999;
+    }
+
+    button:active {
+      background-color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Position yourself within frame.</h1>
+    <p class="instructions">Your recipe will begin once you are entirely in frame</p>
+
+    <!-- Video feed container with iframe streaming -->
+    <div class="camera-container">
+      <div id="videoFeedContainer">
+        <div id="videoPlaceholder" class="camera-status">
+          <img src="./img/no-face.svg" alt="Searching webcam">
+          <p class="feedback-text">Searching Webcam...</p>
+        </div>
+        <iframe id="dynamicIframe" title="Video stream" frameBorder="0"></iframe>
+      </div>
+    </div>
+
+    <!-- Simulation button -->
+    <button id="simulateButton">Simulate In-Frame Detection</button>
+
+    <!-- Back button -->
+    <button id="backButton">Select a different recipe</button>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    // Initialize video stream from embedded server
+    const iframe = document.getElementById('dynamicIframe');
+    const placeholder = document.getElementById('videoPlaceholder');
+    const currentHostname = window.location.hostname;
+    const targetPort = 4912;
+    const targetPath = '/embed';
+    const streamUrl = `http://${currentHostname}:${targetPort}${targetPath}`;
+
+    let intervalId;
+
+    iframe.onload = () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+      placeholder.style.display = 'none';
+      iframe.style.display = 'block';
+    };
+
+    const startLoading = () => {
+      // Set the src to start loading
+      iframe.src = streamUrl;
+    };
+
+    intervalId = setInterval(startLoading, 1000); // Try to load every second
+
+    // Initialize socket.io connection
+    const socket = io("http://localhost:7000");
+    
+    socket.on("connect", () => {
+      console.log("Connected to server");
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from server");
+    });
+
+    socket.on("detect", (data) => {
+      console.log("Detection received:", data);
+    });
+
+    // Simulated detection of user in frame
+    const simulateButton = document.getElementById("simulateButton");
+    simulateButton.addEventListener("click", () => {
+      console.log("Simulating detection, navigating to instructions...");
+      window.location.href = "instructions.html";
+    });
+
+    // Back button to return to recipes.html
+    const backButton = document.getElementById("backButton");
+    backButton.addEventListener("click", () => {
+      console.log("Returning to recipes...");
+      window.location.href = "recipes.html";
+    });
+
+    // Clean up on page unload
+    window.addEventListener("beforeunload", () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    });
+  </script>
+</body>
+</html>
