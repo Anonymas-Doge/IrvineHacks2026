@@ -1,34 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Arduino Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Planner</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="container home-container">
 
-  <h1>🔥 Arduino Smart Dashboard</h1>
+    <div class="hero-content">
+      <h1>What’s on the menu today?</h1>
+      <div class="search-group">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="menuInput" placeholder="Search recipes...">
+        <button class="go-btn" id="goButton">Go!</button>
+      </div>
+      <div class="tag-buttons">
+        <button class="tag-btn" id="breakfastBtn">Breakfast</button>
+        <button class="tag-btn" id="veganBtn">Vegan</button>
+        <button class="tag-btn" id="quickMealsBtn">Quick Meals</button>
+      </div>
+    </div>
 
-  <div class="card">
-    <h2>Temperature</h2>
-    <p id="temperature">-- °C</p>
+    <div class="sparkle">✦</div>
   </div>
 
-  <div class="card">
-    <h2>Heat Index</h2>
-    <p id="heatIndex">-- °C</p>
-  </div>
+  <script>
+    const RECIPE_API_URL = "http://127.0.0.1:5001";
+    function goToRecipes() {
+      const inputValue = document.getElementById("menuInput").value.trim();
+      if (!inputValue) {
+        alert("Please enter a menu item!");
+        return;
+      }
+      localStorage.setItem("menuInput", inputValue);
+      window.location.href = "recipes.html";
+    }
 
-  <div class="card">
-    <h2>Object Detection</h2>
-    <ul id="detections"></ul>
-  </div>
+    async function call_api(menuInput) {
+       try {
+        const response = await fetch(
+          `${RECIPE_API_URL}/chat?q=${menuInput}&difficulty=easy`
+        );
 
-  <div class="card">
-    <h2>Override Threshold</h2>
-    <input type="number" id="thresholdInput" step="0.1" min="0" max="1">
-    <button onclick="sendThreshold()">Set Threshold</button>
-  </div>
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
 
-  <script src="app.js"></script>
+        const json = await response.json();
+
+        localStorage.setItem("recipe", JSON.stringify(json));
+
+        // Navigate AFTER storing
+        window.location.href = "camera.html";
+
+      } catch (error) {
+        console.error("Fetch error:", error.message);
+
+        // Navigate anyway so app doesn't freeze
+        alert("Could not fetch recipe, continuing anyway.");
+        window.location.href = "camera.html";
+      }
+    }
+
+    document.getElementById("menuInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") goToRecipes();
+    });
+
+    document.getElementById("goButton").addEventListener("click", goToRecipes);
+
+<<<<<<< HEAD
+    // document.getElementById("navHome").addEventListener("click", (e) => {
+    //   e.preventDefault();
+    //   console.log("Home clicked");
+    // });
+    // document.getElementById("navRecipes").addEventListener("click", (e) => {
+    //   e.preventDefault();
+    //   console.log("Recipes clicked");
+    // });
+    // document.getElementById("navCommunity").addEventListener("click", (e) => {
+    //   e.preventDefault();
+    //   console.log("Community clicked");
+    // });
+
+=======
+>>>>>>> 4f6d6c4b698ba7ae9a6610e2d2babc1fa01bb014
+    document.getElementById("breakfastBtn").addEventListener("click", async () => {
+      console.log("Breakfast tag clicked");
+      localStorage.setItem("menuInput", "breakfast");
+      await call_api("breakfast")
+    });
+    document.getElementById("veganBtn").addEventListener("click", async () => {
+      console.log("Vegan tag clicked");
+      localStorage.setItem("menuInput", "vegan");
+      await call_api("vegan")
+    });
+    document.getElementById("quickMealsBtn").addEventListener("click", async () => {
+      console.log("Quick Meals tag clicked");
+      localStorage.setItem("menuInput", "quickmeal");
+      await call_api("quickmeal")
+    });
+  </script>
 </body>
 </html>

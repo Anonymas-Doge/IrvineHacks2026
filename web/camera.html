@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Position Yourself</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Page-specific styles */
+    .instructions {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-top: 20px;
+    }
+
+    /* Simulate button and back button styling */
+    button {
+      display: block;
+      margin: 20px auto 0;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 25px;
+      background-color: #B0B0B0;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #999;
+    }
+  </style>
+
+  <!-- Include camera-feed.js from the same folder -->
+  <script src="./camera-feed.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Position yourself within frame.</h1>
+    <p class="instructions">Your recipe will begin once you are entirely in frame</p>
+
+    <!-- Reusable camera component -->
+    <camera-feed width="640" height="360"></camera-feed>
+
+    <!-- Simulation button -->
+    <button id="simulateButton" style="width: 400px">Simulate In-Frame Detection</button>
+
+    <!-- Back button -->
+    <button id="backButton" style="width: 400px">Select a different recipe</button>
+  </div>
+
+  <script>
+    // Simulated detection of user in frame
+    const simulateButton = document.getElementById("simulateButton");
+    simulateButton.addEventListener("click", () => {
+      window.location.href = "instructions.html";
+    });
+
+    // Back button to return to recipes.html
+    const backButton = document.getElementById("backButton");
+    backButton.addEventListener("click", () => {
+      window.location.href = "recipes.html";
+    });
+
+    // Placeholder for future Arduino integration
+    /*
+    const socket = new WebSocket("ws://localhost:PORT");
+    socket.onmessage = function(event) {
+      if (event.data === "in_frame") {
+        window.location.href = "nextpage.html";
+      }
+    };
+    */
+  </script>
+</body>
+</html>

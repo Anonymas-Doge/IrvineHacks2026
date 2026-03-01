@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Done!</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="finish-page">
+    <div class="finish-content">
+      <h1 class="finish-title">All done!</h1>
+      <p class="finish-dish" id="finishDish"></p>
+      <p class="finish-storage" id="finishStorage"></p>
+      <div class="finish-actions">
+        <button class="finish-action-btn" id="cookAgainBtn">Cook Another Meal</button>
+        <button class="finish-action-btn finish-action-btn-outline" id="savePdfBtn">Save as PDF</button>
+      </div>
+    </div>
+
+    <!-- Hidden recipe content rendered for printing -->
+    <div class="print-recipe" id="printRecipe">
+      <h2 id="printDishName"></h2>
+      <ol id="printSteps"></ol>
+      <p id="printStorage"></p>
+    </div>
+  </div>
+
+  <script>
+    const recipe = JSON.parse(
+      localStorage.getItem("recipe") ||
+      '{"dish":"Your dish","instructions":[[null,"No recipe loaded."]],"storageTime":0}'
+    );
+
+    // Fill in dish name and storage time
+    document.getElementById("finishDish").textContent = recipe.dish;
+    const storage = recipe.storageTime;
+    document.getElementById("finishStorage").textContent =
+      storage ? `Stays fresh for up to ${storage} day${storage !== 1 ? "s" : ""}.` : "";
+
+    // Populate the hidden print section
+    document.getElementById("printDishName").textContent = recipe.dish;
+    const ol = document.getElementById("printSteps");
+    recipe.instructions.forEach(([time, text]) => {
+      const li = document.createElement("li");
+      li.textContent = time != null ? `${text} (${time} min)` : text;
+      ol.appendChild(li);
+    });
+    if (storage) {
+      document.getElementById("printStorage").textContent =
+        `Stays fresh for up to ${storage} day${storage !== 1 ? "s" : ""}.`;
+    }
+
+    document.getElementById("cookAgainBtn").addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+
+    document.getElementById("savePdfBtn").addEventListener("click", () => {
+      window.print();
+    });
+  </script>
+</body>
+</html>

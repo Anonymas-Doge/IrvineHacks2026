@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipes</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Which recipe would you like to use?</h1>
+    <div class="recipe-grid" id="recipeGrid"></div>
+    <button id="backButton" style="width: 400px; height: 50px">
+      I want to cook something else instead
+    </button>
+  </div>
+
+ <script>
+  const RECIPE_API_URL = "http://127.0.0.1:5001";
+
+  const menuInput = localStorage.getItem("menuInput") || "Your dish";
+  const grid = document.getElementById("recipeGrid");
+
+  ["easy", "medium", "hard"].forEach((difficulty) => {
+
+    const button = document.createElement("button");
+    button.className = "recipe-card";
+    button.innerHTML = `<strong>${menuInput}</strong><br>${difficulty}`;
+
+    button.addEventListener("click", async () => {
+      try {
+        const response = await fetch(
+          `${RECIPE_API_URL}/chat?q=${menuInput}&difficulty=${difficulty}`
+        );
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const json = await response.json();
+
+        console.log(JSON.stringify(json))
+
+        localStorage.setItem("recipe", JSON.stringify(json));
+
+        // Navigate AFTER storing
+        window.location.href = "camera.html";
+
+      } catch (error) {
+        console.error("Fetch error:", error);
+
+        // Navigate anyway so app doesn't freeze
+        alert("Could not fetch recipe, continuing anyway.");
+        window.location.href = "camera.html";
+      }
+    });
+
+    grid.appendChild(button);
+  });
+
+  // Back button
+  document.getElementById("backButton")
+    .addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+</script>
+</body>
+</html>
