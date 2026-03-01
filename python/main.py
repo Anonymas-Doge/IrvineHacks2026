@@ -21,7 +21,7 @@ load_dotenv()
 
 # Supabase client
 SUPABASE_URL = "https://tsuwporyrjercmuowqyn.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzdXdwb3J5cmplcmNtdW93cXluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNTMzMDEsImV4cCI6MjA4NzkyOTMwMX0.bKxa62sb5873KegZi5_yMKopablkNJSaw4N6gh3u45Q"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzdXdwb3J5cmplcmNtdW93cXluIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjM1MzMwMSwiZXhwIjoyMDg3OTI5MzAxfQ.qiHU_eZ9oK1Tjwx7A7d5Ghu740B9ixETeBuH1LvP71w"
 sb = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def upsert_recipe(category: str, recipe: dict):
