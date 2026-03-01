@@ -191,6 +191,8 @@ def override_threshold(sid, threshold):
 ui.on_message("recipe_request", lambda sid, data: handle_recipe_request(data.get("recipe"), data.get("difficulty")))
 ui.on_message("override_th", override_threshold)
 detection_stream.on_detect_all(send_detections_to_ui)
+Bridge.provide("record_sensor_samples",
+                record_sensor_samples)
 
 # ui.on_message("api_call", process_api_call, data: dict)
 
