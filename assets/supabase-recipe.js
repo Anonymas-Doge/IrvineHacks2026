@@ -12,6 +12,7 @@ function applyRecipeRow(row) {
     const instructions = row.instructions.map(i => [i.time ?? null, i.step]);
 
     // Persist so the page still works on next hard load
+    localStorage.setItem('recipeCategory', row.category);
     localStorage.setItem('recipe', JSON.stringify({
         dish: row.dish,
         instructions: instructions,

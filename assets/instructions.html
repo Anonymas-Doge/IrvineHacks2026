@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Instructions</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
   <div class="instr-page">
@@ -90,11 +91,7 @@
 
     window.addEventListener("beforeunload", () => { clearInterval(intervalId); });
 
-    const recipe = JSON.parse(
-      localStorage.getItem("recipe") ||
-      '{"dish":"Demo","instructions":[[null,"No recipe loaded."]],"storageTime":0}'
-    );
-    const steps = recipe.instructions;
+    const steps = [];
     let currentStep = 0;
     let timerInterval = null;
     let typeTO = null;
@@ -230,13 +227,37 @@
       if (currentStep > 0) goToStep(currentStep - 1, "down");
     });
 
-    // Start on step 1
-    applyStep(0, "up");
-    updateButtons();
+    // Fetch recipe from Supabase, fall back to localStorage
+    (async () => {
+      const SUPABASE_URL = 'https://tsuwporyrjercmuowqyn.supabase.co';
+      const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzdXdwb3J5cmplcmNtdW93cXluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNTMzMDEsImV4cCI6MjA4NzkyOTMwMX0.bKxa62sb5873KegZi5_yMKopablkNJSaw4N6gh3u45Q';
+      const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+      const category = localStorage.getItem('recipeCategory');
+      let loaded = false;
+
+      if (category) {
+        const { data, error } = await db.from('recipes').select('*').eq('category', category).single();
+        if (data && !error) {
+          steps.push(...data.instructions.map(i => [i.time ?? null, i.step]));
+          loaded = true;
+        }
+      }
+
+      if (!loaded) {
+        const saved = JSON.parse(
+          localStorage.getItem('recipe') ||
+          '{"dish":"Demo","instructions":[[null,"No recipe loaded."]],"storageTime":0}'
+        );
+        steps.push(...saved.instructions);
+      }
+
+      applyStep(0, 'up');
+      updateButtons();
+    })();
   </script>
 
   <!-- Supabase real-time listener — must come after inline script -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-recipe.js"></script>
 </body>
 </html>

@@ -246,8 +246,8 @@ function initializeRecipePage() {
         }
         
         showLoading();
+        localStorage.setItem('recipeCategory', recipe.toLowerCase());
 
-        
         // Send recipe request via socket.io
         socket.emit('recipe_request', {
             recipe: recipe,
