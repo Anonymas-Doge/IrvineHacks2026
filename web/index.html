@@ -9,6 +9,13 @@
 <body>
   <div id="bgPanorama"></div>
 
+  <img id="floatingSausage" src="images/sausage.gif" alt="" style="
+    position: fixed;
+    width: 80px;
+    pointer-events: none;
+    z-index: 10;
+  ">
+
   <div class="container home-container">
     <div class="hero-content">
       <h1>What's on the menu today?</h1>
@@ -31,6 +38,26 @@
   </div>
 
   <script>
+    // Floating sausage
+    (function () {
+      const el = document.getElementById("floatingSausage");
+      let x = Math.random() * (window.innerWidth - 80);
+      let y = Math.random() * (window.innerHeight - 80);
+      let vx = 1.2 + Math.random() * 1.2;
+      let vy = 1.0 + Math.random() * 1.0;
+
+      function tick() {
+        x += vx;
+        y += vy;
+        if (x <= 0 || x + 80 >= window.innerWidth)  vx *= -1;
+        if (y <= 0 || y + 80 >= window.innerHeight) vy *= -1;
+        el.style.left = x + "px";
+        el.style.top  = y + "px";
+        requestAnimationFrame(tick);
+      }
+      tick();
+    })();
+
     const RECIPE_API_URL = "http://127.0.0.1:5001";
 
     async function goToRecipes() {
