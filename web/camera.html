@@ -49,28 +49,45 @@
     <button id="backButton" style="width: 400px">Select a different recipe</button>
   </div>
 
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+    const socket = io("http://localhost:7000");
+    socket.on("detect", (data) => {
+        console.log(data);
+    });
+    </script>
+
   <script>
     // Simulated detection of user in frame
+    //const socket = new WebSocket("ws://localhost:7000");
     const simulateButton = document.getElementById("simulateButton");
     simulateButton.addEventListener("click", () => {
       window.location.href = "instructions.html";
+      socket.close()
     });
+
+    /*
+    socket.onmessage = function() {
+      console.log("User detected in frame.");
+    };
+*/
 
     // Back button to return to recipes.html
     const backButton = document.getElementById("backButton");
     backButton.addEventListener("click", () => {
       window.location.href = "recipes.html";
+      socket.close()
+      //console.log("WebSocket connection closed.");
     });
 
     // Placeholder for future Arduino integration
     /*
-    const socket = new WebSocket("ws://localhost:PORT");
     socket.onmessage = function(event) {
       if (event.data === "in_frame") {
         window.location.href = "nextpage.html";
       }
     };
-    */
+*/
   </script>
 </body>
 </html>
