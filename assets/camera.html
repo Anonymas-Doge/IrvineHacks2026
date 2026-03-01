@@ -146,6 +146,9 @@
 
     socket.on("detection", (data) => {
       console.log("Detection received:", JSON.stringify(data));
+      if (data.content === "thumbs-up") {
+        window.location.href = "instructions.html";
+      }
     });
 
     // Simulated detection of user in frame
