@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="bgPanorama"></div>
+
   <div class="container home-container">
 
     <div class="hero-content">
@@ -33,14 +35,52 @@
   <script>
     const socket = io(`http://${window.location.host}`); // Connect to WebUI backend
     
-    function goToRecipes() {
+    async function goToRecipes() {
       const inputValue = document.getElementById("menuInput").value.trim();
       if (!inputValue) {
         alert("Please enter a menu item!");
         return;
       }
       localStorage.setItem("menuInput", inputValue);
-      window.location.href = "recipes.html";
+
+      try {
+        const html = await fetch("recipes.html").then(r => r.text());
+        const parsed = new DOMParser().parseFromString(html, "text/html");
+        const newPage = parsed.getElementById("recipesWrapper");
+
+        // Place off-screen below — no transition yet so cards can populate first
+        newPage.style.cssText = "position:fixed;inset:0;transform:translateY(100%);z-index:1;";
+        document.body.appendChild(newPage);
+
+        // Run scripts so cards are in the DOM before the slide begins
+        parsed.querySelectorAll("script").forEach(s => {
+          const el = document.createElement("script");
+          el.textContent = `(function(){${s.textContent}})();`;
+          document.body.appendChild(el);
+        });
+
+        const home = document.querySelector(".home-container");
+
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          newPage.style.transition = "transform 500ms cubic-bezier(0.4,0,0.2,1)";
+          newPage.style.transform = "translateY(0)";
+          home.style.transition = "transform 500ms cubic-bezier(0.4,0,0.6,1)";
+          home.style.transform = "translateY(-100%)";
+          const bg = document.getElementById("bgPanorama");
+          bg.style.transition = "background-position-y 500ms ease-in-out";
+          bg.style.backgroundPositionY = "70%";
+        }));
+
+        setTimeout(() => {
+          history.pushState({}, "Recipes", "recipes.html");
+          document.title = "Recipes";
+          home.remove();
+          newPage.style.cssText = "";
+        }, 510);
+
+      } catch {
+        window.location.href = "recipes.html";
+      }
     }
 
     function requestRecipe(menuInput, difficulty = "medium") {

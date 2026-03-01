@@ -7,12 +7,20 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Which recipe would you like to use?</h1>
-    <div class="recipe-grid" id="recipeGrid"></div>
-    <button id="backButton" style="width: 400px; height: 50px">
-      I want to cook something else instead
-    </button>
+  <!-- bgPanorama lives outside recipesWrapper so it persists during SPA transitions.
+       On direct navigation it sets the bottom-55% position immediately. -->
+  <div id="bgPanorama" style="background-position-y:70%"></div>
+
+
+
+  <div id="recipesWrapper">
+    <div class="container">
+      <h1>Which recipe would you like to use?</h1>
+      <div class="recipe-grid" id="recipeGrid"></div>
+      <button id="backButton" style="width: 400px; height: 50px">
+        I want to cook something else instead
+      </button>
+    </div>
   </div>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script>
@@ -31,9 +39,9 @@
       button.addEventListener("click", () => {
         // Store the selected difficulty so loading.html knows what to fetch
         localStorage.setItem("fetchDifficulty", difficulty);
-        
+
         console.log("REQUESTED RECIPE SENT TO BACKEND!")
-        
+
         // Send recipe request via socket.io
         socket.emit('recipe_request', {
             recipe: menuInput,
@@ -47,10 +55,47 @@
       grid.appendChild(button);
     });
 
-    // Back button
+    // Back button — reverse SPA slide (recipes slides down, home slides in from above)
     document.getElementById("backButton")
-      .addEventListener("click", () => {
-        window.location.href = "index.html";
+      .addEventListener("click", async () => {
+        try {
+          const html = await fetch("index.html").then(r => r.text());
+          const parsed = new DOMParser().parseFromString(html, "text/html");
+          const newPage = parsed.querySelector(".home-container");
+
+          // Place off-screen above
+          newPage.style.cssText = "position:fixed;inset:0;transform:translateY(-100%);z-index:1;";
+          document.body.appendChild(newPage);
+
+          // Run scripts so buttons are wired up
+          parsed.querySelectorAll("script").forEach(s => {
+            const el = document.createElement("script");
+            el.textContent = `(function(){${s.textContent}})();`;
+            document.body.appendChild(el);
+          });
+
+          const recipes = document.getElementById("recipesWrapper");
+
+          requestAnimationFrame(() => requestAnimationFrame(() => {
+            newPage.style.transition = "transform 500ms cubic-bezier(0.4,0,0.2,1)";
+            newPage.style.transform = "translateY(0)";
+            recipes.style.transition = "transform 500ms cubic-bezier(0.4,0,0.6,1)";
+            recipes.style.transform = "translateY(100%)";
+            const bg = document.getElementById("bgPanorama");
+            bg.style.transition = "background-position-y 500ms ease-in-out";
+            bg.style.backgroundPositionY = "30%";
+          }));
+
+          setTimeout(() => {
+            history.pushState({}, "Menu Planner", "index.html");
+            document.title = "Menu Planner";
+            recipes.remove();
+            newPage.style.cssText = "";
+          }, 510);
+
+        } catch {
+          window.location.href = "index.html";
+        }
       });
   </script>
 </body>
