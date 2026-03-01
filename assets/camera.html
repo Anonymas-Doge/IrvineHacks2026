@@ -145,7 +145,7 @@
     });
 
     socket.on("detect", (data) => {
-      console.log("Detection received:", data);
+      console.log("Detection received:", JSON.stringify(data));
     });
 
     // Simulated detection of user in frame
