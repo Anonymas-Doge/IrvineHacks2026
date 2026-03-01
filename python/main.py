@@ -7,6 +7,7 @@ import json
 import re
 from dotenv import load_dotenv
 import google.genai as genai
+from supabase import create_client
 from datetime import datetime, UTC
 from arduino.app_utils import App, Bridge
 from arduino.app_bricks.web_ui import WebUI
@@ -17,6 +18,24 @@ ui = WebUI()
 detection_stream = VideoObjectDetection(confidence=0.5, debounce_sec=0.0)
 # Load environment
 load_dotenv()
+
+# Supabase client
+SUPABASE_URL = "https://tsuwporyrjercmuowqyn.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzdXdwb3J5cmplcmNtdW93cXluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNTMzMDEsImV4cCI6MjA4NzkyOTMwMX0.bKxa62sb5873KegZi5_yMKopablkNJSaw4N6gh3u45Q"
+sb = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+def upsert_recipe(category: str, recipe: dict):
+    instructions = [{"time": s[0], "step": s[1]} for s in recipe.get("instructions", [])]
+    try:
+        sb.table("recipes").upsert({
+            "category": category.lower(),
+            "dish": recipe.get("dish", ""),
+            "instructions": instructions,
+            "storage_time": recipe.get("storageTime", 0)
+        }, on_conflict="category").execute()
+        print(f"Upserted recipe to Supabase: {category}")
+    except Exception as e:
+        print(f"Supabase upsert error: {e}")
 
 # Preset recipe data
 RECIPE_DATA = {
@@ -94,6 +113,7 @@ def handle_recipe_request(recipe_name: str, difficulty: str = "medium"):
     # Check preset recipes first
     if recipe_name.lower() in RECIPE_DATA:
         recipe = RECIPE_DATA[recipe_name.lower()]
+        upsert_recipe(recipe_name, recipe)
         ui.send_message("recipe", message=recipe)
         return
     
@@ -141,6 +161,7 @@ def handle_recipe_request(recipe_name: str, difficulty: str = "medium"):
         
         parsed_recipe = parse_json(response.text)
         print("Sending back to application")
+        upsert_recipe(recipe_name, parsed_recipe)
         ui.send_message("recipe", message=parsed_recipe)
         
     except Exception as e:
