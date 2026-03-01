@@ -54,15 +54,11 @@
           `${RECIPE_API_URL}/chat?q=${menuInput}&difficulty=easy`
         );
 
-        console.log("GOT")
-
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
 
         const json = await response.json();
-
-        console.log(JSON.stringify(json))
 
         localStorage.setItem("recipe", JSON.stringify(json));
 
@@ -84,18 +80,18 @@
 
     document.getElementById("goButton").addEventListener("click", goToRecipes);
 
-    document.getElementById("navHome").addEventListener("click", (e) => {
-      e.preventDefault();
-      console.log("Home clicked");
-    });
-    document.getElementById("navRecipes").addEventListener("click", (e) => {
-      e.preventDefault();
-      console.log("Recipes clicked");
-    });
-    document.getElementById("navCommunity").addEventListener("click", (e) => {
-      e.preventDefault();
-      console.log("Community clicked");
-    });
+    // document.getElementById("navHome").addEventListener("click", (e) => {
+    //   e.preventDefault();
+    //   console.log("Home clicked");
+    // });
+    // document.getElementById("navRecipes").addEventListener("click", (e) => {
+    //   e.preventDefault();
+    //   console.log("Recipes clicked");
+    // });
+    // document.getElementById("navCommunity").addEventListener("click", (e) => {
+    //   e.preventDefault();
+    //   console.log("Community clicked");
+    // });
 
     document.getElementById("breakfastBtn").addEventListener("click", async () => {
       console.log("Breakfast tag clicked");

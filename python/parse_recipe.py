@@ -37,7 +37,7 @@ VEGAN_DATA = '''{
 QUICK_MEAL_DATA = """{
 "dish": "Simple One-Pot Tomato Basil Pasta",
 "instructions": [
-[null, "Finely mince garlic and sauté in olive oil in a large pan until fragrant."],
+[1, "Finely mince garlic and sauté in olive oil in a large pan until fragrant."],
 [null, "Add a can of crushed tomatoes, dried oregano, salt, and pepper."],
 [10, "Simmer the sauce on low heat to thicken while you boil a pot of salted water."],
 [8, "Cook spaghetti or penne in the boiling water until al dente."],

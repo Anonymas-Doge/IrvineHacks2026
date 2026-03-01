@@ -47,6 +47,16 @@
       </div>
     </div>
 
+    <!-- Audio -->
+     <audio id="ringAudio">
+      <source src="audio/Timer.mp3" type="audio/mpeg">
+     </audio>
+     <audio id="tickAudio">
+      <source src="audio/tick.mp3" type="audio/mpeg">
+     </audio>
+     <audio id="alarmAudio">
+      <source src="audio/Alarm.mp3" type="audio.mpeg">
+     </audio>
   </div>
 
   <script>
@@ -60,6 +70,8 @@
     let typeTO = null;
     let eraseTO = null;
 
+    timerRingAudio = document.getElementById("ringAudio")
+    tickAudio = document.getElementById("tickAudio")
     // ── Timer ────────────────────────────────────────────────────────
     function startTimer(minutes) {
       clearInterval(timerInterval);
@@ -69,8 +81,20 @@
         const m = Math.floor(secs / 60);
         const s = secs % 60;
         el.textContent = `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+        if (secs < 20) {
+          
+          if (tickAudio.paused) {
+            tickAudio.currentTime = 0
+            tickAudio.play()
+          }
+        }
         if (secs > 0) secs--;
-        else clearInterval(timerInterval);
+        else {
+          tickAudio.pause()
+          timerRingAudio.currentTime = 0
+          timerRingAudio.play()
+          clearInterval(timerInterval);
+        }
       }
       tick();
       timerInterval = setInterval(tick, 1000);
@@ -79,6 +103,10 @@
     function clearTimer() {
       clearInterval(timerInterval);
       document.getElementById("timerDisplay").textContent = "--:--";
+      timerRingAudio.pause()
+      timerRingAudio.currentTime = 0;
+      timerTickAudio.pause()
+      timerTickAudio.currentTime = 0;
     }
 
     // ── Step number animation ────────────────────────────────────────
