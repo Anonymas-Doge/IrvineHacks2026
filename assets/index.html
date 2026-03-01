@@ -1,118 +1,112 @@
-<!--
-SPDX-FileCopyrightText: Copyright (C) ARDUINO SRL (http://www.arduino.cc)
-
-SPDX-License-Identifier: MPL-2.0
--->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Generic Object Detection</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Planner</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div>
-        <div class="header">
-            <h1 class="arduino-text">Video Generic Object Detection</h1>
-            <img class="arduino-logo" src="./img/logo.svg" alt="Arduino Logo">
-        </div>
+  <div class="container home-container">
 
-        <div class="main-content">
-            <div class="container" id="video-container">
-                <div id="videoFeedContainer">
-                    <div id="videoPlaceholder" class="camera-status">
-                        <img src="./img/no-face.svg" alt="Searching webcam">
-                        <p class="feedback-text">Searching Webcam...</p>
-                    </div>
-                    <iframe id="dynamicIframe" title="Video stream" width="1024px" height="768px" frameBorder="0" style="display: none;"></iframe>
-                </div>
-            </div>
-
-            <div class="right-column">
-                <div class="container container-right">
-                    <div class="controls-section">
-                        <div class="control-group">
-                            <div class="control-confidence">
-                                <div style="display: flex; align-items: center; gap: 8px; position: relative;">
-                                <label id="confidence-label" for="confidenceSlider">Confidence</label>
-                                <img src="./img/info.svg" alt="Info" class="info-btn confidence"/>
-                                <div class="popover"></div>
-                            </div>
-                                <button id="confidenceResetButton" class="btn-tertiary">
-                                    <input type="number" id="confidenceInput" class="confidence-input" min="0" max="1" step="0.05" value="0.50">
-                                    <img src="img/icon-reset.svg" alt="Reset" class="reset-icon">
-                                </button>
-                            </div>
-                            <div class="slider-box">
-                                <span class="confidence-limits">0</span>
-                                <div class="slider-container">
-                                    <div class="slider-progress" id="sliderProgress"></div>
-                                    <div class="confidence-value-display" id="confidenceValueDisplay">0.5</div>
-                                    <input type="range" id="confidenceSlider" min="0" max="1" step="0.01" value="0.5">
-                                </div>
-                                <span class="confidence-limits">1</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container container-right">
-                    <div id="feedback-section" class="feedback-section">
-                        <div style="display: flex; align-items: center; gap: 8px; position: relative;">
-                        <h2 class="recent-scans-title" style="margin: 0;">Feedback</h2>
-                        <img src="./img/info.svg" alt="Info" class="info-btn feedback"/>
-                        <div class="popover"></div>
-                    </div>
-                        <div id="feedback-content" class="feedback-content">
-                            <img src="img/stars.svg" alt="Stars">
-                            <p class="feedback-text">System response will appear here</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container container-right">
-                    <div class="recent-detections-section">
-                        <div class="recent-scans-title-container">
-                            <h2 class="recent-scans-title">Recent detections</h2>
-                        </div>
-                        <ul id="recentDetections"></ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="error-container" class="error-message" style="display: none;"></div>
+    <div class="hero-content">
+      <h1>What’s on the menu today?</h1>
+      <div class="search-group">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="menuInput" placeholder="Search recipes...">
+        <button class="go-btn" id="goButton">Go!</button>
+      </div>
+      <div class="tag-buttons">
+        <button class="tag-btn" id="breakfastBtn">Breakfast</button>
+        <button class="tag-btn" id="veganBtn">Vegan</button>
+        <button class="tag-btn" id="quickMealsBtn">Quick Meals</button>
+      </div>
     </div>
 
-    <script>
-        const iframe = document.getElementById('dynamicIframe');
-        const placeholder = document.getElementById('videoPlaceholder');
-        const currentHostname = window.location.hostname;
-        const targetPort = 4912;
-        const targetPath = '/embed';
-        const streamUrl = `http://${currentHostname}:${targetPort}${targetPath}`;
+    <div class="sparkle">✦</div>
+  </div>
 
-        let intervalId;
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    const socket = io(`http://${window.location.host}`); // Connect to WebUI backend
+    
+    function goToRecipes() {
+      const inputValue = document.getElementById("menuInput").value.trim();
+      if (!inputValue) {
+        alert("Please enter a menu item!");
+        return;
+      }
+      localStorage.setItem("menuInput", inputValue);
+      window.location.href = "recipes.html";
+    }
 
-        iframe.onload = () => {
-            if (intervalId) {
-                clearInterval(intervalId);
-            }
-            placeholder.style.display = 'none';
-            iframe.style.display = 'block';
-        };
+    function requestRecipe(menuInput, difficulty = "medium") {
+      // Show loading state
+      const goButton = document.getElementById("goButton");
+      const originalText = goButton.textContent;
+      goButton.textContent = "Loading...";
+      goButton.disabled = true;
 
-        const startLoading = () => {
-            // Set the src to start loading
-            iframe.src = streamUrl;
-        };
+      // Listen for recipe response
+      const recipeHandler = (recipe) => {
+        console.log("Recieved recipe from backend")
+        localStorage.setItem("recipe", JSON.stringify(recipe));
+        window.location.href = "camera.html";
+      };
 
-        intervalId = setInterval(startLoading, 1000); // Try to load every second
-    </script>
+      const errorHandler = (error) => {
+        console.error("Recipe error:", error);
+        alert("Could not fetch recipe, continuing anyway.");
+        goButton.textContent = originalText;
+        goButton.disabled = false;
+        window.location.href = "camera.html";
+      };
 
-    <script src="libs/socket.io.min.js"></script>
-    <script src="app.js"></script>
+      // Set up one-time listeners
+      socket.once('recipe', recipeHandler);
+      socket.once('recipe_error', errorHandler);
 
+      // Request recipe from backend
+      socket.emit('recipe_request', {
+        recipe: menuInput,
+        difficulty: difficulty
+      });
+
+      // Timeout after 10 seconds
+      setTimeout(() => {
+        socket.off('recipe', recipeHandler);
+        socket.off('recipe_error', errorHandler);
+        goButton.textContent = originalText;
+        goButton.disabled = false;
+        alert("Recipe request timed out, continuing anyway.");
+        window.location.href = "camera.html";
+      }, 10000);
+    }
+
+    document.getElementById("menuInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") goToRecipes();
+    });
+
+    document.getElementById("goButton").addEventListener("click", goToRecipes);
+
+    document.getElementById("breakfastBtn").addEventListener("click", () => {
+      console.log("Breakfast tag clicked");
+      localStorage.setItem("menuInput", "breakfast");
+      requestRecipe("breakfast", "easy");
+    });
+    document.getElementById("veganBtn").addEventListener("click", () => {
+      console.log("Vegan tag clicked");
+      localStorage.setItem("menuInput", "vegan");
+      requestRecipe("vegan", "easy");
+    });
+    document.getElementById("quickMealsBtn").addEventListener("click", () => {
+      console.log("Quick Meals tag clicked");
+      localStorage.setItem("menuInput", "quickmeal");
+      requestRecipe("quickmeal", "easy");
+    });
+  </script>
 </body>
 </html>
