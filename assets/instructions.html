@@ -237,19 +237,15 @@
       console.log('[Supabase] recipeCategory from localStorage:', category);
       let loaded = false;
 
-      if (category) {
-        console.log('[Supabase] Fetching from Supabase for category:', category);
-        const { data, error } = await db.from('recipes').select('*').eq('category', category).single();
-        console.log('[Supabase] data:', data, '| error:', error);
-        if (data && !error) {
-          const instructions = data.instructions.map(i => [i.time ?? null, i.step]);
-          console.log('[Supabase] Parsed instructions:', instructions);
-          steps.push(...instructions);
-          loaded = true;
-        }
-      } else {
-        console.warn('[Supabase] No recipeCategory in localStorage — falling back');
+      const { data, error } = await db.from('recipes').select('*').single();
+      console.log('[Supabase] data:', data, '| error:', error);
+      if (data && !error) {
+        const instructions = data.instructions.map(i => [i.time ?? null, i.step]);
+        console.log('[Supabase] Parsed instructions:', instructions);
+        steps.push(...instructions);
+        loaded = true;
       }
+    
 
       if (!loaded) {
         console.log('[Supabase] Using localStorage fallback');
