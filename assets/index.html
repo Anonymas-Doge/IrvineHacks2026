@@ -8,6 +8,7 @@
 </head>
 <body>
   <div id="bgPanorama"></div>
+  <img id="sausage" src="images/sausage.gif" alt="">
 
   <div class="container home-container">
 
@@ -31,6 +32,33 @@
     <div class="sparkle">✦</div>
   </div>
 
+  <script>
+    (function () {
+      if (window._sausageRunning) return;
+      window._sausageRunning = true;
+      const img = document.getElementById('sausage');
+      if (!img) return;
+      let x = Math.random() * (window.innerWidth - 80);
+      let y = Math.random() * (window.innerHeight - 80);
+      let vx = (Math.random() * 1.5 + 0.8) * (Math.random() < 0.5 ? 1 : -1);
+      let vy = (Math.random() * 1.5 + 0.8) * (Math.random() < 0.5 ? 1 : -1);
+      img.style.left = x + 'px';
+      img.style.top  = y + 'px';
+      function tick() {
+        x += vx; y += vy;
+        const w = img.offsetWidth || 80, h = img.offsetHeight || 80;
+        const maxX = window.innerWidth - w, maxY = window.innerHeight - h;
+        if (x <= 0)    { x = 0;    vx =  Math.abs(vx); }
+        if (x >= maxX) { x = maxX; vx = -Math.abs(vx); }
+        if (y <= 0)    { y = 0;    vy =  Math.abs(vy); }
+        if (y >= maxY) { y = maxY; vy = -Math.abs(vy); }
+        img.style.left = x + 'px';
+        img.style.top  = y + 'px';
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    })();
+  </script>
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script>
     const socket = io(`http://${window.location.host}`); // Connect to WebUI backend

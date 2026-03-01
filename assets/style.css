@@ -79,6 +79,16 @@ button:hover {
   background-color: #999;
 }
 
+/* ── Floating sausage ── */
+#sausage {
+  position: fixed;
+  z-index: 999;
+  width: 80px;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
 /* ── Recipes page full-screen wrapper ── */
 #recipesWrapper {
   width: 100%;
