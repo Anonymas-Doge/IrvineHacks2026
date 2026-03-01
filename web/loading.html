@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading…</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-color: #F0D9B5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Hidden until the 1-second delay passes */
+    #loadingContent {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    #loadingContent.visible {
+      display: flex;
+    }
+
+    .loading-title {
+      font-family: 'Georgia', serif;
+      font-size: 2.2rem;
+      font-weight: 400;
+      color: #2A1C14;
+    }
+
+    .loading-dots {
+      display: flex;
+      gap: 10px;
+    }
+
+    .loading-dots span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: #2A1C14;
+      animation: dotBounce 1.2s infinite ease-in-out both;
+    }
+
+    .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0s; }
+
+    @keyframes dotBounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40%            { transform: scale(1.0); opacity: 1;   }
+    }
+  </style>
+</head>
+<body>
+  <div id="loadingContent">
+    <p class="loading-title">Fetching your recipe…</p>
+    <div class="loading-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <script>
+    const RECIPE_API_URL = "http://127.0.0.1:5001";
+
+    const menuInput = localStorage.getItem("menuInput") || "Your dish";
+    const difficulty = localStorage.getItem("fetchDifficulty") || "medium";
+
+    // After 1 second, show the loading animation if we're still waiting
+    const showTimer = setTimeout(() => {
+      document.getElementById("loadingContent").classList.add("visible");
+    }, 1000);
+
+    // Single API call — owned entirely by this page
+    fetch(`${RECIPE_API_URL}/chat?q=${menuInput}&difficulty=${difficulty}`)
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        const json = await response.json();
+        console.log(JSON.stringify(json));
+        localStorage.setItem("recipe", JSON.stringify(json));
+        clearTimeout(showTimer);
+        window.location.href = "camera.html";
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+        clearTimeout(showTimer);
+        alert("Could not fetch recipe, continuing anyway.");
+        window.location.href = "camera.html";
+      });
+  </script>
+</body>
+</html>
