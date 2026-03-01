@@ -5,7 +5,7 @@ bricks:
 - arduino:web_ui: {}
 - arduino:video_object_detection: {
         variables: {
-            EI_OBJ_DETECTION_MODULE: /home/arduino/.arduino-bricks/ei-models/model.eim
+            EI_OBJ_DETECTION_MODEL: /home/arduino/ArduinoApps/irvinehacks2026/ei-models/irvinehacks2026-linux-aarch64-v2.eim
         }
     }
 icon: 😀

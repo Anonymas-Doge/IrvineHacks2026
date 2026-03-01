@@ -30,3 +30,6 @@ Thumbs.db # Windows
 
 # Optional: TypeScript declaration files
 typings/
+
+# Optional: Cache directories
+.cache/
