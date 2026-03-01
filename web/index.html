@@ -35,6 +35,7 @@
   </div>
 
   <script>
+    const RECIPE_API_URL = "http://127.0.0.1:5001";
     function goToRecipes() {
       const inputValue = document.getElementById("menuInput").value.trim();
       if (!inputValue) {
@@ -43,6 +44,36 @@
       }
       localStorage.setItem("menuInput", inputValue);
       window.location.href = "recipes.html";
+    }
+
+    async function call_api(menuInput) {
+       try {
+        const response = await fetch(
+          `${RECIPE_API_URL}/chat?q=${menuInput}&difficulty=easy`
+        );
+
+        console.log("GOT")
+
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const json = await response.json();
+
+        console.log(JSON.stringify(json))
+
+        localStorage.setItem("recipe", JSON.stringify(json));
+
+        // Navigate AFTER storing
+        window.location.href = "camera.html";
+
+      } catch (error) {
+        console.error("Fetch error:", error.message);
+
+        // Navigate anyway so app doesn't freeze
+        alert("Could not fetch recipe, continuing anyway.");
+        window.location.href = "camera.html";
+      }
     }
 
     document.getElementById("menuInput").addEventListener("keydown", (e) => {
@@ -64,14 +95,20 @@
       console.log("Community clicked");
     });
 
-    document.getElementById("breakfastBtn").addEventListener("click", () => {
+    document.getElementById("breakfastBtn").addEventListener("click", async () => {
       console.log("Breakfast tag clicked");
+      localStorage.setItem("menuInput", "breakfast");
+      await call_api("breakfast")
     });
-    document.getElementById("veganBtn").addEventListener("click", () => {
+    document.getElementById("veganBtn").addEventListener("click", async () => {
       console.log("Vegan tag clicked");
+      localStorage.setItem("menuInput", "vegan");
+      await call_api("vegan")
     });
-    document.getElementById("quickMealsBtn").addEventListener("click", () => {
+    document.getElementById("quickMealsBtn").addEventListener("click", async () => {
       console.log("Quick Meals tag clicked");
+      localStorage.setItem("menuInput", "quickmeal");
+      await call_api("quickmeal")
     });
   </script>
 </body>

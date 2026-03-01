@@ -8,6 +8,44 @@ import json
 import re
 import time
 
+BREAKFAST_DATA = '''{
+"dish": "Avocado Toast with Poached Egg",
+"instructions": [
+    [null, "Thickly slice a loaf of sourdough and brush both sides with extra virgin olive oil."],
+    [5, "Toast the bread in a 200°C oven for 5 minutes or until the edges are golden and the center is still slightly chewy."],
+    [null, "In a bowl, mash a ripe avocado with lime juice, sea salt, red pepper flakes, and a hint of cumin."],
+    [null, "Bring a pot of water with a splash of vinegar to a gentle simmer"],
+    [3, "poach an egg for 3 minutes."],
+    [null, "Spread the avocado generously on the toast, top with the poached egg, and garnish with thin radish slices and microgreens."]
+],
+"storageTime": 1
+}'''
+
+VEGAN_DATA = '''{
+"dish": "Crispy Sesame Tofu with Jasmine Rice",
+"instructions": [
+[15, "Press the extra-firm tofu between paper towels under a heavy weight to remove excess moisture."],
+[12, "Rinse jasmine rice until water runs clear, then simmer for 12 minutes in a lidded pot with a pinch of salt."],
+[null, "Cut tofu into cubes, toss in cornstarch and sea salt, and pan-fry in sesame oil until all sides are golden and crisp."],
+[null, "In a small saucepan, whisk together soy sauce, honey, rice vinegar, grated ginger, and toasted sesame oil."],
+[5, "Simmer the sauce for 5 minutes or until it reduces to a thick, glossy glaze."],
+[null, "Toss the crispy tofu in the glaze and serve over the fluffed rice, garnished with toasted sesame seeds and sliced scallions."]
+],
+"storageTime": 3
+}'''
+
+QUICK_MEAL_DATA = """{
+"dish": "Simple One-Pot Tomato Basil Pasta",
+"instructions": [
+[null, "Finely mince garlic and sauté in olive oil in a large pan until fragrant."],
+[null, "Add a can of crushed tomatoes, dried oregano, salt, and pepper."],
+[10, "Simmer the sauce on low heat to thicken while you boil a pot of salted water."],
+[8, "Cook spaghetti or penne in the boiling water until al dente."],
+[null, "Drain pasta and toss directly into the sauce with a handful of fresh torn basil leaves and a sprinkle of parmesan."]
+],
+"storageTime": 4
+}"""
+
 FAKE_DATA = """{
 	"dish": "Spaghetti and Meatballs",
 	"instructions": [
@@ -67,12 +105,24 @@ CORS(app)
 @app.route("/chat", methods=["GET"])
 def chat():
     # time.sleep(4) # simulating time for
-    # return flask.jsonify(
-    #     parse_json(FAKE_DATA)
-    # )
+    
+    
     
     recipe = flask.request.args.get("q")
     difficulty = flask.request.args.get("difficulty")
+
+    if (recipe == "vegan"):
+        return flask.jsonify(
+            parse_json(VEGAN_DATA)
+        )
+    elif recipe == "breakfast":
+        return flask.jsonify(
+            parse_json(BREAKFAST_DATA)
+        )
+    elif recipe == "quickmeal":
+        return flask.jsonify(
+            parse_json(QUICK_MEAL_DATA)
+        )
 
     content = []
     content.append({
