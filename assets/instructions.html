@@ -95,9 +95,9 @@
         } else {
           window.location.href = "finish.html";
         }
-      } else if (data.content === "thumbs-down" && data.confidence >= .75) {
-        if (currentStep > 0) goToStep(currentStep - 1, "down");
-      }
+      }// else if (data.content === "thumbs-down" && data.confidence >= .75) {
+      //  if (currentStep > 0) goToStep(currentStep - 1, "down");
+      //}
     });
 
     window.addEventListener("beforeunload", () => { clearInterval(intervalId); });
