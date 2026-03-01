@@ -87,11 +87,15 @@
 
     socket.on("connect", () => { console.log("Connected to server"); });
     socket.on("disconnect", () => { console.log("Disconnected from server"); });
+    let lastThumbsUp = 0;
     socket.on("detection", (data) => {
       // console.log("Detection received:", data);
       if (data.content === "thumbs-up" && data.confidence >= .75) {
+        const now = Date.now();
+        if (now - lastThumbsUp < 4000) return;
+        lastThumbsUp = now;
         if (currentStep < steps.length - 1) {
-        goToStep(currentStep + 1, "up");
+          goToStep(currentStep + 1, "up");
         } else {
           window.location.href = "finish.html";
         }
