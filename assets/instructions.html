@@ -234,24 +234,34 @@
       const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
       const category = localStorage.getItem('recipeCategory');
+      console.log('[Supabase] recipeCategory from localStorage:', category);
       let loaded = false;
 
       if (category) {
+        console.log('[Supabase] Fetching from Supabase for category:', category);
         const { data, error } = await db.from('recipes').select('*').eq('category', category).single();
+        console.log('[Supabase] data:', data, '| error:', error);
         if (data && !error) {
-          steps.push(...data.instructions.map(i => [i.time ?? null, i.step]));
+          const instructions = data.instructions.map(i => [i.time ?? null, i.step]);
+          console.log('[Supabase] Parsed instructions:', instructions);
+          steps.push(...instructions);
           loaded = true;
         }
+      } else {
+        console.warn('[Supabase] No recipeCategory in localStorage — falling back');
       }
 
       if (!loaded) {
+        console.log('[Supabase] Using localStorage fallback');
         const saved = JSON.parse(
           localStorage.getItem('recipe') ||
           '{"dish":"Demo","instructions":[[null,"No recipe loaded."]],"storageTime":0}'
         );
+        console.log('[Supabase] localStorage recipe:', saved);
         steps.push(...saved.instructions);
       }
 
+      console.log('[Supabase] Final steps array:', steps);
       applyStep(0, 'up');
       updateButtons();
     })();
