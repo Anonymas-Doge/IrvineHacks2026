@@ -29,8 +29,10 @@
     <div class="sparkle">✦</div>
   </div>
 
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script>
-    const RECIPE_API_URL = "http://127.0.0.1:5001";
+    const socket = io(`http://${window.location.host}`); // Connect to WebUI backend
+    
     function goToRecipes() {
       const inputValue = document.getElementById("menuInput").value.trim();
       if (!inputValue) {
@@ -41,30 +43,46 @@
       window.location.href = "recipes.html";
     }
 
-    async function call_api(menuInput) {
-       try {
-        const response = await fetch(
-          `${RECIPE_API_URL}/chat?q=${menuInput}&difficulty=easy`
-        );
+    function requestRecipe(menuInput, difficulty = "medium") {
+      // Show loading state
+      const goButton = document.getElementById("goButton");
+      const originalText = goButton.textContent;
+      goButton.textContent = "Loading...";
+      goButton.disabled = true;
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const json = await response.json();
-
-        localStorage.setItem("recipe", JSON.stringify(json));
-
-        // Navigate AFTER storing
+      // Listen for recipe response
+      const recipeHandler = (recipe) => {
+        localStorage.setItem("recipe", JSON.stringify(recipe));
         window.location.href = "camera.html";
+      };
 
-      } catch (error) {
-        console.error("Fetch error:", error.message);
-
-        // Navigate anyway so app doesn't freeze
+      const errorHandler = (error) => {
+        console.error("Recipe error:", error);
         alert("Could not fetch recipe, continuing anyway.");
+        goButton.textContent = originalText;
+        goButton.disabled = false;
         window.location.href = "camera.html";
-      }
+      };
+
+      // Set up one-time listeners
+      socket.once('recipe', recipeHandler);
+      socket.once('recipe_error', errorHandler);
+
+      // Request recipe from backend
+      socket.emit('recipe_request', {
+        recipe: menuInput,
+        difficulty: difficulty
+      });
+
+      // Timeout after 10 seconds
+      setTimeout(() => {
+        socket.off('recipe', recipeHandler);
+        socket.off('recipe_error', errorHandler);
+        goButton.textContent = originalText;
+        goButton.disabled = false;
+        alert("Recipe request timed out, continuing anyway.");
+        window.location.href = "camera.html";
+      }, 10000);
     }
 
     document.getElementById("menuInput").addEventListener("keydown", (e) => {
@@ -73,20 +91,20 @@
 
     document.getElementById("goButton").addEventListener("click", goToRecipes);
 
-    document.getElementById("breakfastBtn").addEventListener("click", async () => {
+    document.getElementById("breakfastBtn").addEventListener("click", () => {
       console.log("Breakfast tag clicked");
       localStorage.setItem("menuInput", "breakfast");
-      await call_api("breakfast")
+      requestRecipe("breakfast", "easy");
     });
-    document.getElementById("veganBtn").addEventListener("click", async () => {
+    document.getElementById("veganBtn").addEventListener("click", () => {
       console.log("Vegan tag clicked");
       localStorage.setItem("menuInput", "vegan");
-      await call_api("vegan")
+      requestRecipe("vegan", "easy");
     });
-    document.getElementById("quickMealsBtn").addEventListener("click", async () => {
+    document.getElementById("quickMealsBtn").addEventListener("click", () => {
       console.log("Quick Meals tag clicked");
       localStorage.setItem("menuInput", "quickmeal");
-      await call_api("quickmeal")
+      requestRecipe("quickmeal", "easy");
     });
   </script>
 </body>

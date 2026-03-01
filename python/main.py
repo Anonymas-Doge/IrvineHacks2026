@@ -15,7 +15,6 @@ from arduino.app_bricks.video_objectdetection import VideoObjectDetection
 # Initialize WebUI and detection
 ui = WebUI()
 detection_stream = VideoObjectDetection(confidence=0.5, debounce_sec=0.0)
-
 # Load environment
 load_dotenv()
 
